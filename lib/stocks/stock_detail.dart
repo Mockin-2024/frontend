@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/api/basic_api.dart';
+import 'package:mockin/dto/basic/current_price_dto.dart';
 import 'package:mockin/stocks/buy_or_sell.dart';
 import 'package:mockin/widgets/news.dart';
 
@@ -61,13 +64,34 @@ class StockDetail extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(20, 0, 0, 10),
-                  child: Text(
-                    '차트',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        '차트',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          BasicApi.currentPrice(
+                            DTO: CurrentPriceDTO(
+                                excd: excd,
+                                symb: stockSymb,
+                                email: UserEmail().getEmail()!),
+                          );
+                        },
+                        child: const Text(
+                          '테스트',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 Container(
@@ -241,8 +265,10 @@ class StockDetail extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Buy(
+                        builder: (context) => BuyOrSell(
+                          excd: excd,
                           stockName: stockName,
+                          stockSymb: stockSymb,
                           stockPrice: stockPrice,
                           stockRate: stockRate,
                           buy: false,
@@ -262,8 +288,10 @@ class StockDetail extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => Buy(
+                        builder: (context) => BuyOrSell(
+                          excd: excd,
                           stockName: stockName,
+                          stockSymb: stockSymb,
                           stockPrice: stockPrice,
                           stockRate: stockRate,
                           buy: true,

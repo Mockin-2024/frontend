@@ -3,7 +3,7 @@ import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/widgets/one_line.dart';
 import 'package:mockin/widgets/base_rank.dart';
 import 'package:mockin/afterlogin/user_email.dart';
-import 'package:mockin/dto/condition_search_dto.dart';
+import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 

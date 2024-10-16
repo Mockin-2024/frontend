@@ -23,6 +23,30 @@ class ExchangeTrans {
     'TSE': 'TKSE',
   };
 
+  static Map<String, String> buyOrder = {
+    'NAS': 'VTTT1002U',
+    'NYS': 'VTTT1002U',
+    'AMS': 'VTTT1002U',
+    'HKS': 'VTTS1002U',
+    'SHS': 'VTTS0202U',
+    'SZS': 'VTTS0305U',
+    'HSX': 'VTTS0311U',
+    'HNX': 'VTTS0311U',
+    'TSE': 'VTTS0308U',
+  };
+
+  static Map<String, String> sellOrder = {
+    'NAS': 'VTTT1001U',
+    'NYS': 'VTTT1001U',
+    'AMS': 'VTTT1001U',
+    'HKS': 'VTTS1001U',
+    'SHS': 'VTTS1005U',
+    'SZS': 'VTTS0304U',
+    'HSX': 'VTTS0310U',
+    'HNX': 'VTTS0310U',
+    'TSE': 'VTTS0307U',
+  };
+
   static Map<String, String> money = {
     '나스닥': '\$',
     '뉴욕': '\$',

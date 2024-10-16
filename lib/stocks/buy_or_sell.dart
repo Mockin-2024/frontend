@@ -1,27 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/api/trade_api.dart';
+import 'package:mockin/dto/trading/psamount_dto.dart';
+import 'package:mockin/dto/trading/stock_order_dto.dart';
+import 'package:mockin/provider/exchange_trans.dart';
 
-class Buy extends StatelessWidget {
-  final String stockName, stockPrice, stockRate;
+class BuyOrSell extends StatelessWidget {
+  final String excd, stockName, stockSymb, stockPrice, stockRate;
   final bool buy;
   final myController = TextEditingController();
 
-  Buy(
+  BuyOrSell(
       {super.key,
+      required this.excd,
       required this.stockName,
+      required this.stockSymb,
       required this.stockPrice,
       required this.stockRate,
       required this.buy});
 
   void buyPressed() {
     var tmp = myController.text;
-    if (tmp != '') {
-      //var harmony = int.parse(tmp);
-      // print(howmany);
-      // api 수행
-    } else {
-      // print('no way');
-    }
-    print('>>> buy');
+    TradeApi.buyOrder(
+      dto: StockOrderDTO(
+        excd: excd,
+        symb: stockSymb,
+        orderQuantity: tmp,
+        email: UserEmail().getEmail()!,
+      ),
+    );
   }
 
   void sellPressed() {
@@ -152,6 +159,26 @@ class Buy extends StatelessWidget {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    onPressed: () {
+                      TradeApi.psAmount(
+                        DTO: PsamountDTO(
+                            excd: ExchangeTrans.orderTrade[excd]!,
+                            symb: stockSymb,
+                            unitPrice: '100',
+                            email: UserEmail().getEmail()!),
+                      );
+                    },
+                    child: const Text(
+                      '테스트',
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
