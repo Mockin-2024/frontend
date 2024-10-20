@@ -26,9 +26,8 @@ FutureBuilder<List<BasicStockModel>> rankContent(String trade) {
               excd: stocks[index].excd,
               stockName: stocks[index].name,
               stockSymb: stocks[index].symb,
-              stockPrice:
-                  '${double.parse(stocks[index].last)}${ExchangeTrans.money[trade]}',
-              stockRate: '${stocks[index].rate}%',
+              stockPrice: '${double.parse(stocks[index].last)}',
+              stockRate: stocks[index].rate,
             );
           },
         );

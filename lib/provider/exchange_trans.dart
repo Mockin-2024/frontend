@@ -47,7 +47,7 @@ class ExchangeTrans {
     'TSE': 'VTTS0307U',
   };
 
-  static Map<String, String> money = {
+  static Map<String, String> sign = {
     '나스닥': '\$',
     '뉴욕': '\$',
     '홍콩': 'HK\$',
@@ -57,6 +57,30 @@ class ExchangeTrans {
     '호치민': '₫',
     '하노이': '₫',
     '도쿄': '¥',
+  };
+
+  static Map<String, String> signExchange = {
+    'NAS': '\$',
+    'NYS': '\$',
+    'HKS': 'HK\$',
+    'AMS': '\$',
+    'SHS': '¥',
+    'SZS': '¥',
+    'HSX': '₫',
+    'HNX': '₫',
+    'TSE': '¥',
+  };
+
+  static Map<String, String> transactionCurrency = {
+    'NAS': 'USD',
+    'NYS': 'USD',
+    'HKS': 'HKD',
+    'AMS': 'USD',
+    'SHS': 'CNY',
+    'SZS': 'CNY',
+    'HSX': 'VND',
+    'HNX': 'VND',
+    'TSE': 'JPY',
   };
   // '나스닥', '뉴욕', '홍콩', '아멕스', '상해', '심천', '호치민', '하노이', '도쿄'
 }

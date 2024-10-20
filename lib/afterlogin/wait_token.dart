@@ -56,7 +56,7 @@ class _WaitTokenState extends State<WaitToken> {
       await mockSocketKey();
       // await realSocketKey();
       await mockToken();
-      // await realToken();
+      await realToken();
 
       if (mounted) {
         Navigator.pushReplacement(

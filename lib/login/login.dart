@@ -128,7 +128,7 @@ class _LoginState extends State<Login> {
                         if (!context.mounted) return;
                         if (checkList.contains(email.text)) {
                           // 정보 등록 유저 확인
-                          Navigator.push(
+                          Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
                               builder: (context) => const WaitToken(),
@@ -136,7 +136,7 @@ class _LoginState extends State<Login> {
                           );
                           return;
                         }
-                        Navigator.push(
+                        Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                             builder: (context) => InfoRegister(),

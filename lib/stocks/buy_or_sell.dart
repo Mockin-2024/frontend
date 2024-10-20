@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/api/trade_api.dart';
+import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/psamount_dto.dart';
 import 'package:mockin/dto/trading/stock_order_dto.dart';
 import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/widgets/alert.dart';
 
 class BuyOrSell extends StatelessWidget {
   final String excd, stockName, stockSymb, stockPrice, stockRate;
@@ -19,24 +21,39 @@ class BuyOrSell extends StatelessWidget {
       required this.stockRate,
       required this.buy});
 
-  void buyPressed() {
-    var tmp = myController.text;
-    TradeApi.buyOrder(
+  Future<String> buyPressed() async {
+    return await TradeApi.buyOrder(
       dto: StockOrderDTO(
         excd: excd,
         symb: stockSymb,
-        orderQuantity: tmp,
+        orderQuantity: myController.text,
         email: UserEmail().getEmail()!,
       ),
     );
   }
 
-  void sellPressed() {
-    print('>>> sell');
+  Future<String> sellPressed() async {
+    return TradeApi.sellOrder(
+      dto: StockOrderDTO(
+        excd: excd,
+        symb: stockSymb,
+        orderQuantity: myController.text,
+        email: UserEmail().getEmail()!,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final Future<List<String>> stockData = TradeApi.balanceHowMuch(
+      DTO: BalanceDTO(
+        overseasExchangeCode: ExchangeTrans.orderTrade[excd]!,
+        transactionCurrencyCode: ExchangeTrans.transactionCurrency[excd]!,
+        email: UserEmail().getEmail()!,
+      ),
+      stockName: stockName,
+    );
+    var sign = ExchangeTrans.signExchange[excd];
     return Scaffold(
       body: Column(
         children: [
@@ -55,20 +72,15 @@ class BuyOrSell extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    stockPrice,
-                    style: const TextStyle(
-                      color: Colors.black,
-                    ),
-                  ),
-                  Text(
-                    ' ($stockRate%)',
-                    style: const TextStyle(
-                      color: Colors.black,
+                    '$stockPrice$sign  $stockRate%',
+                    style: TextStyle(
+                      color: stockRate[0] == '+' ? Colors.red : Colors.blue,
                     ),
                   ),
                 ],
               ),
               Container(
+                width: MediaQuery.of(context).size.width * 0.9,
                 margin: const EdgeInsets.all(8.0),
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 255, 255),
@@ -93,27 +105,45 @@ class BuyOrSell extends StatelessWidget {
                       const SizedBox(
                         height: 10,
                       ),
-                      const Row(
-                        children: [
-                          Text(
-                            '29,821원',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Text(
-                            '\$22.59',
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
-                      ),
+                      buy
+                          ? Text(
+                              '$stockPrice$sign',
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            )
+                          : FutureBuilder(
+                              future: stockData,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    '${double.parse(snapshot.data!.first).toStringAsFixed(1)}$sign',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  );
+                                } else {
+                                  return const Text(
+                                    '-',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                     ],
                   ),
                 ),
               ),
               Container(
-                margin: const EdgeInsets.all(8.0),
+                width: MediaQuery.of(context).size.width * 0.9,
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 255, 255, 255),
                   borderRadius: BorderRadius.circular(15),
@@ -142,56 +172,89 @@ class BuyOrSell extends StatelessWidget {
                           border: const OutlineInputBorder(),
                           labelText: buy ? '몇 주 구매할까요?' : '몇 주 판매할까요?',
                         ),
-                        keyboardType: TextInputType.text,
+                        keyboardType: TextInputType.number,
                         controller: myController,
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        buy ? '구매 가능 -원, 최대 -주' : '판매 가능 최대 -주',
-                        style: const TextStyle(color: Colors.black),
-                      ),
+                      buy
+                          ? FutureBuilder(
+                              future: TradeApi.psAmount(
+                                DTO: PsamountDTO(
+                                    excd: ExchangeTrans.orderTrade[excd]!,
+                                    symb: stockSymb,
+                                    unitPrice: stockPrice,
+                                    email: UserEmail().getEmail()!),
+                              ),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  var howMany = snapshot.data;
+                                  return Text(
+                                    '구매 가능 ${double.parse(howMany[0]).toStringAsFixed(1)}$sign, 최대 ${howMany[1]}주',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                } else {
+                                  return const Text('');
+                                }
+                              },
+                            )
+                          : FutureBuilder(
+                              future: stockData,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasData) {
+                                  return Text(
+                                    '${snapshot.data!.last}$sign',
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                    ),
+                                  );
+                                } else {
+                                  return const Text(
+                                    '-',
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  );
+                                }
+                              },
+                            ),
                     ],
                   ),
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    onPressed: () {
-                      TradeApi.psAmount(
-                        DTO: PsamountDTO(
-                            excd: ExchangeTrans.orderTrade[excd]!,
-                            symb: stockSymb,
-                            unitPrice: '100',
-                            email: UserEmail().getEmail()!),
-                      );
-                    },
-                    child: const Text(
-                      '테스트',
-                      style: TextStyle(
-                        color: Colors.white,
-                      ),
+              const SizedBox(
+                height: 10,
+              ),
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                  ),
+                  onPressed: buy
+                      ? () async {
+                          String st = await buyPressed();
+                          if (!context.mounted) return;
+                          Navigator.pop(context);
+                          Alert.showAlert(context, st, '');
+                        }
+                      : () async {
+                          String st = await sellPressed();
+                          if (!context.mounted) return;
+                          Navigator.pop(context);
+                          Alert.showAlert(context, st, '');
+                        },
+                  child: Text(
+                    buy ? '구매' : '판매',
+                    style: const TextStyle(
+                      color: Colors.white,
                     ),
                   ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    onPressed: buy ? buyPressed : sellPressed,
-                    child: Text(
-                      buy ? '구매' : '판매',
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               )
             ],
           ),

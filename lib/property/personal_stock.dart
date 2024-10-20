@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/dto/trading/present_balance_dto.dart';
 import 'package:mockin/property/order_list.dart';
+import 'package:mockin/widgets/exchange.dart';
 import 'package:mockin/widgets/personal_purchase_stock.dart';
+import 'package:mockin/api/trade_api.dart';
 
 class PersonalStock extends StatelessWidget {
   const PersonalStock({super.key});
@@ -14,13 +18,34 @@ class PersonalStock extends StatelessWidget {
         const SizedBox(
           height: 60,
         ),
-        const Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-          SizedBox(
+        Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+          const SizedBox(
             width: 60,
           ),
           Column(children: [
-            Text('총 자산', style: TextStyle(color: Colors.black)),
-            Text('tot_asst_amt', style: TextStyle(color: Colors.black)),
+            const Text('총 자산', style: TextStyle(color: Colors.black)),
+            FutureBuilder(
+                future: TradeApi.presentBalance(
+                  DTO: PresentBalanceDTO(
+                    currencyDivisonCode: '02',
+                    countryCode: '000',
+                    marketCode: '00',
+                    inquiryDivisionCode: '00',
+                    email: UserEmail().getEmail()!,
+                  ),
+                ),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData) {
+                    return Text(
+                      '${snapshot.data}원',
+                      style: const TextStyle(color: Colors.black),
+                    );
+                  }
+                  return const Text(
+                    '-',
+                    style: TextStyle(color: Colors.black),
+                  );
+                }),
           ]),
         ]),
         Container(
@@ -62,27 +87,33 @@ class PersonalStock extends StatelessWidget {
             ),
           ),
         ),
-        GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const OrderList(),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const OrderList(),
+                  ),
+                );
+              },
+              child: const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 50,
+                  vertical: 10,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('주문 내역 >', style: TextStyle(color: Colors.black)),
+                  ],
+                ),
               ),
-            );
-          },
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 50,
-              vertical: 10,
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('주문 내역 >', style: TextStyle(color: Colors.black)),
-              ],
-            ),
-          ),
+            const Exchange(),
+          ],
         ),
         Padding(
           padding: const EdgeInsets.symmetric(

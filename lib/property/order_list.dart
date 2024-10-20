@@ -1,5 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/api/trade_api.dart';
+import 'package:mockin/dto/trading/ccnl_dto.dart';
+import 'package:mockin/dto/trading/nccs_dto.dart';
+import 'package:mockin/models/stock_breakdown.dart';
+import 'package:mockin/models/stock_own.dart';
+import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/widgets/exchange.dart';
+import 'package:mockin/widgets/main_container.dart';
+import 'package:mockin/widgets/one_line.dart';
 import 'package:mockin/widgets/order.dart';
+import 'package:provider/provider.dart';
+import 'package:mockin/provider/exchange_provider.dart';
 
 class OrderList extends StatelessWidget {
   const OrderList({
@@ -8,17 +20,19 @@ class OrderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SizedBox(
-              height: 60,
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(50, 0, 0, 10),
-              child: Text(
+        body: SingleChildScrollView(
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const SizedBox(
+          height: 60,
+        ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Text(
                 '주문 내역',
                 style: TextStyle(
                   color: Colors.black,
@@ -26,107 +40,112 @@ class OrderList extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                 ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(40, 0, 0, 10),
-                  child: Text(
-                    '미체결',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 173, 173, 173),
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  child: const Column(
-                    children: [
-                      Order(
-                        stockName: '테슬라',
-                        buySell: '매수',
-                        date: '241012',
-                        time: '061023',
-                        amount: '0.2',
-                        price: '336000',
-                      ),
-                      Order(
-                        stockName: '인텔',
-                        buySell: '매수',
-                        date: '241013',
-                        time: '061024',
-                        amount: '0.3',
-                        price: '33600',
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.fromLTRB(40, 0, 0, 10),
-                  child: Text(
-                    '체결',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 173, 173, 173),
-                    borderRadius: BorderRadius.circular(15),
-                    border: Border.all(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  child: const Column(
-                    children: [
-                      Order(
-                        stockName: '팡둬둬 네트워크 그룹',
-                        buySell: '매도',
-                        date: '241012',
-                        time: '061023',
-                        amount: '20',
-                        price: '1657',
-                      ),
-                      Order(
-                        stockName: '인텔',
-                        buySell: '매수',
-                        date: '241013',
-                        time: '061024',
-                        amount: '2',
-                        price: '31390',
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
+              Exchange(),
+            ],
+          ),
         ),
-      ),
-    );
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 10),
+                child: Text(
+                  '미체결',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              mainContainer(
+                context,
+                FutureBuilder(
+                    future: TradeApi.nccs(
+                      DTO: NccsDTO(
+                        overseasExchangeCode: ExchangeTrans
+                            .orderTrade[ExchangeTrans.trade[trade]]!,
+                        sortOrder: 'DS',
+                        email: UserEmail().getEmail()!,
+                      ),
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<StockBreakdown> li = snapshot.data!;
+                        return ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: li.length,
+                          itemBuilder: (context, index) {
+                            return Order(
+                              stockName: li[index].name,
+                              buySell: li[index].buyOrSell,
+                              date: li[index].odDate,
+                              time: li[index].odTime,
+                              amount: li[index].amount,
+                              price: li[index].price,
+                            );
+                          },
+                        );
+                      } else {
+                        return OneLine(A: '', B: '');
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Padding(
+                padding: EdgeInsets.fromLTRB(40, 0, 0, 10),
+                child: Text(
+                  '체결',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 24,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              mainContainer(
+                context,
+                FutureBuilder(
+                    future: TradeApi.ccnl(
+                      DTO: CcnlDTO(
+                        orderStartDate: '20241010',
+                        orderEndDate: '20241018',
+                        email: UserEmail().getEmail()!,
+                      ),
+                    ),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        List<StockOwn> li = snapshot.data!;
+                        return ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: li.length,
+                          itemBuilder: (context, index) {
+                            return Order(
+                              stockName: li[index].name,
+                              buySell: li[index].buyOrSell,
+                              date: li[index].odDate,
+                              time: li[index].odTime,
+                              amount: li[index].amount,
+                              price: li[index].price,
+                            );
+                          },
+                        );
+                      } else {
+                        return OneLine(A: '', B: '');
+                      }
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ]),
+    ));
   }
 }

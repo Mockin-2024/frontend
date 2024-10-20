@@ -9,6 +9,6 @@ class CcnlDTO {
 
   Uri convert(String baseUrl) {
     return Uri.parse(
-        'email=$email&orderEndDate=$orderEndDate&orderStartDate=$orderStartDate');
+        '$baseUrl?email=$email&orderEndDate=$orderEndDate&orderStartDate=$orderStartDate');
   }
 }

@@ -17,7 +17,7 @@ class ExchangeState extends State<Exchange> {
     final exchangeProvider = Provider.of<ExchangeProvider>(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 60, 20, 5),
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [

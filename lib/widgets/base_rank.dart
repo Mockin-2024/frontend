@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/stocks/stock_detail.dart';
 import 'package:mockin/widgets/one_line.dart';
 
@@ -48,8 +49,10 @@ class BaseRank extends StatelessWidget {
           },
           child: Column(
             children: [
-              OneLine(A: stockName, B: stockPrice),
-              OneLine(A: '', B: stockRate, bIsNum: true),
+              OneLine(
+                  A: stockName,
+                  B: '$stockPrice${ExchangeTrans.signExchange[excd]}'),
+              OneLine(A: '', B: '$stockRate%', bIsNum: true),
             ],
           ),
         ),
