@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class TextInput extends StatelessWidget {
   final String name;
   final TextEditingController tec;
+  bool isChecking;
 
-  const TextInput({
+  TextInput({
     super.key,
     required this.name,
     required this.tec,
+    this.isChecking = true,
   });
 
   @override
@@ -19,6 +21,7 @@ class TextInput extends StatelessWidget {
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
           labelText: name,
+          enabled: isChecking,
         ),
         keyboardType: TextInputType.text,
         controller: tec,

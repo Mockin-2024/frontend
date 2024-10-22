@@ -56,7 +56,10 @@ class _StockState extends State<Stock> {
               const SizedBox(
                 height: 5,
               ),
-              mainContainer(context, rankContent(trade)),
+              mainContainer(
+                context,
+                rankContent(trade, 3),
+              ),
             ]),
             Column(children: [
               const SizedBox(

@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 class PasswordInput extends StatefulWidget {
   final String name;
   final TextEditingController tec;
+  bool isChecking;
 
-  const PasswordInput({
+  PasswordInput({
     super.key,
     required this.name,
     required this.tec,
+    this.isChecking = true,
   });
 
   @override
@@ -24,6 +26,7 @@ class _PasswordInputState extends State<PasswordInput> {
       child: TextField(
         key: Key(widget.name),
         decoration: InputDecoration(
+          enabled: widget.isChecking,
           border: const OutlineInputBorder(),
           labelText: widget.name,
           suffixIcon: IconButton(

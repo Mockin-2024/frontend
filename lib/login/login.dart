@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/wait_token.dart';
+import 'package:mockin/dto/login/login_dto.dart';
 import 'package:mockin/login/find_pw.dart';
-// import 'package:mockin/api/login_api.dart';
+import 'package:mockin/api/login_api.dart';
 import 'package:mockin/login/info_register.dart';
 import 'package:mockin/login/signup.dart';
 import 'package:mockin/widgets/alert.dart';
@@ -22,12 +22,6 @@ class _LoginState extends State<Login> {
   // var _autoLogin = false;
   final email = TextEditingController();
   final password = TextEditingController();
-  List<String> checkList = ['test1014@naver.com', 'test@naver.com'];
-  // 정보 등록한 적이 있는 사용자 리스트
-  // 정보를 등록한 적이 있다면 정보 등록(info_register.dart)로 가지 않고,
-  // 바로 Navi.dart로 넘어가기 위함
-  // 지금은 임시로 이렇게 해두지만 그냥 계좌 번호가 null이 아니다 정도만
-  // 확인하는 api가 있으면 될 듯?
 
   void initialization() async {
     await Future.delayed(
@@ -36,25 +30,17 @@ class _LoginState extends State<Login> {
     FlutterNativeSplash.remove();
   }
 
-  bool checkInput() {
+  Future<bool> loginReq() async {
     if (email.text.isNotEmpty && password.text.isNotEmpty) {
-      // var rst = await LoginApi.userAccount(email.text, password.text);
-      // 이메일과 pw가 db에 존재하는지 여부 확인
-      return true;
+      return await LoginApi.loginRequest(
+        DTO: LoginDTO(
+          email: email.text,
+          pw: password.text,
+        ),
+      );
     }
     return false;
   }
-
-  // Future<bool> checkInput() async {
-  //   if (email.text.isNotEmpty && password.text.isNotEmpty) {
-  //     // var rst = await LoginApi.userAccount(email.text, password.text);
-  //     // 이메일과 pw가 db에 존재하는지 여부 확인
-  //     return true;
-  //   }
-  //   return false;
-  // }
-
-  // 정보 등록 유저 확인
 
   @override
   void initState() {
@@ -121,21 +107,11 @@ class _LoginState extends State<Login> {
                 ),
                 Center(
                   child: TextButton(
-                    onPressed: () {
-                      bool result = checkInput();
+                    onPressed: () async {
+                      bool result = await loginReq();
                       if (result) {
                         UserEmail().saveEmail(email.text);
                         if (!context.mounted) return;
-                        if (checkList.contains(email.text)) {
-                          // 정보 등록 유저 확인
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const WaitToken(),
-                            ),
-                          );
-                          return;
-                        }
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(

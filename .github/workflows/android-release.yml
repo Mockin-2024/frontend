@@ -11,6 +11,27 @@ on:
 
 # 4
 jobs:
+  version:
+    name: Create version number
+
+    runs-on: ubuntu-latest
+
+    steps:
+      -uses: actions/checkout@v4
+
+      -name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+      -name: Use GitVersion
+          id: gitversion
+          uses: gittools/actions/gitversion/execute@v0.9.7
+      -name: Upload version.txt
+          uses: actions/upload-artifact@v2
+          with:
+            name: gitversion
+            path: version.txt
+
   # 5
   build:
     # 6
@@ -25,11 +46,14 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '15.0.2'
+          cache: 'gradle'
       # 10
       - uses: subosito/flutter-action@v2
         with:
           # 11
           flutter-version: '3.24.3'
+          channel: 'stable'
+          cache: true
       # 12
       - name: Get dependencies
         run: flutter pub get

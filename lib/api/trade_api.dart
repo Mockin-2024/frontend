@@ -8,6 +8,7 @@ import 'package:mockin/dto/trading/present_balance_dto.dart';
 import 'package:mockin/dto/trading/psamount_dto.dart';
 import 'dart:convert';
 import 'package:mockin/dto/trading/stock_order_dto.dart';
+import 'package:mockin/models/personal_stock_item.dart';
 import 'package:mockin/models/stock_breakdown.dart';
 import 'package:mockin/models/stock_own.dart';
 import 'package:mockin/provider/exchange_trans.dart';
@@ -101,26 +102,15 @@ class TradeApi {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print(jsonDecode(utf8.decode(response.bodyBytes))['output3']);
       return jsonDecode(utf8.decode(response.bodyBytes))['output3']
           ['tot_asst_amt'];
     }
     print('>>> failed');
     return '';
   }
-  // TradeApi.presentBalanceStockHave(
-  //                   DTO: PresentBalanceDTO(
-  //                     currencyDivisonCode: '02',
-  //                     countryCode: '000',
-  //                     marketCode: '00',
-  //                     inquiryDivisionCode: '00',
-  //                     email: UserEmail().getEmail()!,
-  //                   ),
-  //                   stock: widget.stockName,
-  //                 ),
 
   // 잔고 api
-  static Future balance({
+  static Future<List<String>> balance({
     required BalanceDTO DTO,
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
@@ -128,10 +118,33 @@ class TradeApi {
 
     if (response.statusCode == 200) {
       print(jsonDecode(utf8.decode(response.bodyBytes)));
-      return true;
+      dynamic a = jsonDecode(utf8.decode(response.bodyBytes))['output2'];
+      return [a['frcr_pchs_amt1'], a['ovrs_tot_pfls'], a['tot_pftrt']];
     }
     print('>>> failed');
-    return false;
+    return ['0.0', '0.0', '0.0'];
+  }
+
+  // 잔고 api - 투자 종목 가져오기
+  static Future<List<PersonalStockItem>> balanceList({
+    required BalanceDTO DTO,
+  }) async {
+    List<PersonalStockItem> li = [];
+    final url = DTO.convert('$baseUrl/$trading/$lBalance');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      List<dynamic> yours =
+          jsonDecode(utf8.decode(response.bodyBytes))['output1'];
+      for (var your in yours) {
+        li.add(
+          PersonalStockItem.fromJson(your),
+        );
+      }
+      return li;
+    }
+    print('>>> failed');
+    return li;
   }
 
   // 잔고 api - 보유한 주식인지 확인
@@ -142,7 +155,6 @@ class TradeApi {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
     final response = await http.get(url);
 
-    print(jsonDecode(utf8.decode(response.bodyBytes))['output1']);
     if (response.statusCode == 200) {
       final List<dynamic> how =
           jsonDecode(utf8.decode(response.bodyBytes))['output1'];
@@ -157,7 +169,7 @@ class TradeApi {
     return false;
   }
 
-  // 잔고 api - 매입 평균 가격 + 해외잔고수량
+  // 잔고 api - 판매 : 매입 평균 가격 + 해외잔고수량
   static Future<List<String>> balanceHowMuch({
     required BalanceDTO DTO,
     required String stockName,
@@ -165,7 +177,6 @@ class TradeApi {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
     final response = await http.get(url);
 
-    print(jsonDecode(utf8.decode(response.bodyBytes))['output1']);
     if (response.statusCode == 200) {
       final List<dynamic> how =
           jsonDecode(utf8.decode(response.bodyBytes))['output1'];
@@ -188,7 +199,7 @@ class TradeApi {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print(jsonDecode(utf8.decode(response.bodyBytes))['output']);
+      print('>>> 미체결내역 조회 결과 : ${jsonDecode(utf8.decode(response.bodyBytes))}');
       List<dynamic> li = jsonDecode(utf8.decode(response.bodyBytes))['output'];
       for (var l in li) {
         nc.add(StockBreakdown.fromJson(l));
@@ -208,7 +219,7 @@ class TradeApi {
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      print(jsonDecode(utf8.decode(response.bodyBytes))['output']);
+      print('>>> 체결내역 조회 결과 : ${jsonDecode(utf8.decode(response.bodyBytes))}');
       List<dynamic> li = jsonDecode(utf8.decode(response.bodyBytes))['output'];
       for (var l in li) {
         nc.add(StockOwn.fromJson(l));

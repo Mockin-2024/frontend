@@ -7,13 +7,14 @@ import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 
-FutureBuilder<List<BasicStockModel>> rankContent(String trade) {
+FutureBuilder<List<BasicStockModel>> rankContent(String trade, int opt) {
   return FutureBuilder(
     future: BasicApi.conditionSearch(
       DTO: ConditionSearchDTO(
         EXCD: ExchangeTrans.trade[trade]!,
         email: UserEmail().getEmail()!,
       ),
+      opt: opt,
     ),
     builder: (context, snapshot) {
       if (snapshot.hasData) {

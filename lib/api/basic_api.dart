@@ -29,6 +29,7 @@ class BasicApi {
   // 조건검색 api
   static Future<List<BasicStockModel>> conditionSearch({
     required ConditionSearchDTO DTO,
+    required int opt,
   }) async {
     List<BasicStockModel> stockInstances = [];
     final url = DTO.convert('$baseUrl/$basic/$search');
@@ -41,6 +42,38 @@ class BasicApi {
         stockInstances.add(
           BasicStockModel.fromJson(stock),
         );
+      }
+      if (opt < 3) {
+        if (opt == 1) {
+          // 거래대금
+          stockInstances.sort(
+            (a, b) => double.parse(b.avol).compareTo(double.parse(a.avol)),
+          );
+        } else if (opt == 2) {
+          // 거래량
+          stockInstances.sort(
+            (a, b) => double.parse(b.tvol).compareTo(double.parse(a.tvol)),
+          );
+        }
+      } else {
+        if (opt == 3) {
+          // 시가총액
+          stockInstances.sort(
+            (a, b) => double.parse(b.valx).compareTo(double.parse(a.valx)),
+          );
+        } else if (opt == 4) {
+          // 급상승
+          stockInstances.sort(
+            (a, b) => double.parse(b.toRateSort)
+                .compareTo(double.parse(a.toRateSort)),
+          );
+        } else if (opt == 5) {
+          // 급하락
+          stockInstances.sort(
+            (a, b) => double.parse(a.toRateSort)
+                .compareTo(double.parse(b.toRateSort)),
+          );
+        }
       }
       return stockInstances;
     }

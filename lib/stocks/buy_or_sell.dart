@@ -27,17 +27,19 @@ class BuyOrSell extends StatelessWidget {
         excd: excd,
         symb: stockSymb,
         orderQuantity: myController.text,
+        overseasOrderUnitPrice: stockPrice,
         email: UserEmail().getEmail()!,
       ),
     );
   }
 
-  Future<String> sellPressed() async {
+  Future<String> sellPressed(String sellM) async {
     return TradeApi.sellOrder(
       dto: StockOrderDTO(
         excd: excd,
         symb: stockSymb,
         orderQuantity: myController.text,
+        overseasOrderUnitPrice: sellM,
         email: UserEmail().getEmail()!,
       ),
     );
@@ -45,6 +47,7 @@ class BuyOrSell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var sellMoney = '';
     final Future<List<String>> stockData = TradeApi.balanceHowMuch(
       DTO: BalanceDTO(
         overseasExchangeCode: ExchangeTrans.orderTrade[excd]!,
@@ -118,8 +121,10 @@ class BuyOrSell extends StatelessWidget {
                               future: stockData,
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {
+                                  sellMoney = double.parse(snapshot.data!.first)
+                                      .toStringAsFixed(1);
                                   return Text(
-                                    '${double.parse(snapshot.data!.first).toStringAsFixed(1)}$sign',
+                                    '$sellMoney$sign',
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 18,
@@ -243,7 +248,7 @@ class BuyOrSell extends StatelessWidget {
                           Alert.showAlert(context, st, '');
                         }
                       : () async {
-                          String st = await sellPressed();
+                          String st = await sellPressed(sellMoney);
                           if (!context.mounted) return;
                           Navigator.pop(context);
                           Alert.showAlert(context, st, '');

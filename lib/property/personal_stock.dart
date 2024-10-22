@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/present_balance_dto.dart';
+import 'package:mockin/models/personal_stock_item.dart';
 import 'package:mockin/property/order_list.dart';
+import 'package:mockin/provider/exchange_provider.dart';
+import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/widgets/exchange.dart';
+import 'package:mockin/widgets/main_container.dart';
+import 'package:mockin/widgets/one_line.dart';
 import 'package:mockin/widgets/personal_purchase_stock.dart';
 import 'package:mockin/api/trade_api.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class PersonalStock extends StatelessWidget {
   const PersonalStock({super.key});
 
   // final Future<String> test = MoneyApi.getPersonalStockList();
+  String thousand(String st) {
+    if (st.length > 2) {
+      return NumberFormat('#,###').format(int.parse(st));
+    }
+    return st;
+  }
 
   @override
   Widget build(BuildContext context) {
+    var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
     return Scaffold(
       body: Column(children: [
         const SizedBox(
@@ -37,7 +52,7 @@ class PersonalStock extends StatelessWidget {
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Text(
-                      '${snapshot.data}원',
+                      '${thousand(snapshot.data)}원',
                       style: const TextStyle(color: Colors.black),
                     );
                   }
@@ -48,44 +63,44 @@ class PersonalStock extends StatelessWidget {
                 }),
           ]),
         ]),
-        Container(
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: 40,
-              vertical: 10,
-            ),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('원금', style: TextStyle(color: Colors.black)),
-                    Text('71,589원', style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('총 수익', style: TextStyle(color: Colors.black)),
-                    Text('+824원', style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('총 수익율', style: TextStyle(color: Colors.black)),
-                    Text('+1.1%', style: TextStyle(color: Colors.black)),
-                  ],
-                ),
-              ],
-            ),
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 40,
+            vertical: 10,
           ),
+          child: FutureBuilder(
+              future: TradeApi.balance(
+                DTO: BalanceDTO(
+                  overseasExchangeCode:
+                      ExchangeTrans.orderTrade[ExchangeTrans.trade[trade]]!,
+                  transactionCurrencyCode: ExchangeTrans
+                      .transactionCurrency[ExchangeTrans.trade[trade]]!,
+                  email: UserEmail().getEmail()!,
+                ),
+              ),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  List<String> dt = snapshot.data!;
+                  return Column(
+                    children: [
+                      OneLine(A: '투자 금액', B: '${dt[0]}원'),
+                      const SizedBox(height: 10),
+                      OneLine(A: '총 수익', B: '${dt[1]}원'),
+                      const SizedBox(height: 10),
+                      OneLine(A: '총 수익율', B: '${dt[2]}%'),
+                    ],
+                  );
+                }
+                return Column(
+                  children: [
+                    OneLine(A: '투자 금액', B: '-원'),
+                    const SizedBox(height: 10),
+                    OneLine(A: '총 수익', B: '-원'),
+                    const SizedBox(height: 10),
+                    OneLine(A: '총 수익율', B: '-%'),
+                  ],
+                );
+              }),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -115,43 +130,52 @@ class PersonalStock extends StatelessWidget {
             const Exchange(),
           ],
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 30,
-          ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 128, 128, 128),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: const Column(
-              // 차후 ListView로 바꿀 예정
-              children: [
-                PersonalPurchaseStock(
-                  stockName: '테슬라',
-                  nowPrice: '1064.400000',
-                  stockAmount: '744',
-                  stockRate: '-81.75',
-                  avgPurchasePrice: '5832.2148',
-                  foreignCurrencyPurchases: '4339167.78523',
-                  plusMinusValuation: '-3547254.185235',
-                  currentMoney: '791913.60000000',
-                ),
-                PersonalPurchaseStock(
-                  stockName: '인텔',
-                  nowPrice: '31592',
-                  stockAmount: '2',
-                  stockRate: '-0.08',
-                  avgPurchasePrice: '29590',
-                  foreignCurrencyPurchases: '59180',
-                  plusMinusValuation: '3888',
-                  currentMoney: '63068',
-                ),
-              ],
-            ),
-          ),
-        ),
+        mainContainer(context, UserCurrentStock(trade: trade)),
       ]),
     );
+  }
+}
+
+class UserCurrentStock extends StatelessWidget {
+  const UserCurrentStock({
+    super.key,
+    required this.trade,
+  });
+
+  final String trade;
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+        future: TradeApi.balanceList(
+          DTO: BalanceDTO(
+            overseasExchangeCode:
+                ExchangeTrans.orderTrade[ExchangeTrans.trade[trade]]!,
+            transactionCurrencyCode:
+                ExchangeTrans.transactionCurrency[ExchangeTrans.trade[trade]]!,
+            email: UserEmail().getEmail()!,
+          ),
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<PersonalStockItem> li = snapshot.data!;
+            return ListView.builder(
+                padding: EdgeInsets.zero,
+                itemCount: li.length,
+                itemBuilder: (context, index) {
+                  return PersonalPurchaseStock(
+                    stockName: li[index].name,
+                    nowPrice: li[index].nowPrice,
+                    stockAmount: li[index].howMuchStock,
+                    stockRate: li[index].pOrlrate,
+                    avgPurchasePrice: li[index].avgPrice,
+                    foreignCurrencyPurchases: li[index].overseasStockAmount,
+                    plusMinusValuation: li[index].pOrlamount,
+                    currentMoney: li[index].stockAmount,
+                  );
+                });
+          }
+          return const Text('');
+        });
   }
 }

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/afterlogin/navi.dart';
-import 'package:mockin/api/login_api.dart';
+import 'package:mockin/api/account_api.dart';
 import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/dto/account/user_email_dto.dart';
 
 class WaitToken extends StatefulWidget {
   const WaitToken({super.key});
@@ -11,10 +12,14 @@ class WaitToken extends StatefulWidget {
 }
 
 class _WaitTokenState extends State<WaitToken> {
+  String email = UserEmail().getEmail()!;
   bool isLoading = true;
 
   Future<void> mockSocketKey() async {
-    var tmp = await LoginApi.getMockSocketKey(UserEmail().getEmail()!);
+    var tmp = await AccountApi.getMockSocketKey(
+        DTO: UserEmailDTO(
+      email: email,
+    ));
     if (tmp) {
       print('>>> mock web success');
     } else {
@@ -23,7 +28,10 @@ class _WaitTokenState extends State<WaitToken> {
   }
 
   Future<void> realSocketKey() async {
-    var tmp = await LoginApi.getRealSocketKey(UserEmail().getEmail()!);
+    var tmp = await AccountApi.getRealSocketKey(
+        DTO: UserEmailDTO(
+      email: email,
+    ));
     if (tmp) {
       print('>>> real web success');
     } else {
@@ -32,8 +40,10 @@ class _WaitTokenState extends State<WaitToken> {
   }
 
   Future<void> mockToken() async {
-    var email = UserEmail().getEmail()!;
-    var tmp = await LoginApi.getMockToken(email);
+    var tmp = await AccountApi.getMockToken(
+        DTO: UserEmailDTO(
+      email: email,
+    ));
     if (tmp) {
       print('>>> mock token success');
     } else {
@@ -42,8 +52,10 @@ class _WaitTokenState extends State<WaitToken> {
   }
 
   Future<void> realToken() async {
-    var email = UserEmail().getEmail()!;
-    var tmp = await LoginApi.getRealToken(email);
+    var tmp = await AccountApi.getRealToken(
+        DTO: UserEmailDTO(
+      email: email,
+    ));
     if (tmp) {
       print('>>> real token success');
     } else {
@@ -54,7 +66,7 @@ class _WaitTokenState extends State<WaitToken> {
   void doit() async {
     try {
       await mockSocketKey();
-      // await realSocketKey();
+      await realSocketKey();
       await mockToken();
       await realToken();
 
