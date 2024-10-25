@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/basic/current_price_dto.dart';
@@ -95,7 +94,6 @@ class _StockDetailState extends State<StockDetail> {
                               EXCD: widget.excd,
                               SYMB: widget.stockSymb,
                               GUBN: gapGUBN[seletedGap]![0],
-                              email: UserEmail().getEmail()!,
                             ),
                             idx: gapGUBN[seletedGap]![1],
                           ),
@@ -159,9 +157,9 @@ class _StockDetailState extends State<StockDetail> {
                       FutureBuilder(
                           future: BasicApi.currentPrice(
                             DTO: CurrentPriceDTO(
-                                excd: widget.excd,
-                                symb: widget.stockSymb,
-                                email: UserEmail().getEmail()!),
+                              excd: widget.excd,
+                              symb: widget.stockSymb,
+                            ),
                           ),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
@@ -197,7 +195,6 @@ class _StockDetailState extends State<StockDetail> {
                       NMIN: bunbong[seletedGap]![0],
                       PINC: '1',
                       NREC: '120',
-                      email: UserEmail().getEmail()!,
                     ),
                     period: bunbong[seletedGap]![1],
                   ),
@@ -305,7 +302,6 @@ class _StockDetailState extends State<StockDetail> {
                           ExchangeTrans.orderTrade[widget.excd]!,
                       transactionCurrencyCode:
                           ExchangeTrans.transactionCurrency[widget.excd]!,
-                      email: UserEmail().getEmail()!,
                     ),
                     stockName: widget.stockName,
                   ),

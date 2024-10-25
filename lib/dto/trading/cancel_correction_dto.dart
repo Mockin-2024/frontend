@@ -1,6 +1,5 @@
 class CancelCorrectionDTO {
-  final String email,
-      transactionId,
+  final String transactionId,
       overseasExchangeCode,
       productNumber,
       originalOrderNumber,
@@ -9,7 +8,6 @@ class CancelCorrectionDTO {
       overseasOrderPrice;
 
   CancelCorrectionDTO({
-    required this.email,
     required this.transactionId,
     required this.overseasExchangeCode,
     required this.productNumber,
@@ -21,7 +19,6 @@ class CancelCorrectionDTO {
 
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
       'transactionId': transactionId,
       'overseasExchangeCode': overseasExchangeCode,
       'productNumber': productNumber,

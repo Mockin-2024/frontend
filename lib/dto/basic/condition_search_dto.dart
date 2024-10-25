@@ -40,11 +40,9 @@ class ConditionSearchDTO {
   String coEnPer; // PER 끝
 
   String EXCD; // 거래소 정보
-  String email; // 이메일
 
   ConditionSearchDTO({
     required this.EXCD,
-    required this.email,
     this.coYnPricecur = '',
     this.coStPricecur = '',
     this.coEnPricecur = '',
@@ -81,6 +79,6 @@ class ConditionSearchDTO {
         'coYnAmt=$coYnAmt&coStAmt=$coStAmt&coEnAmt=$coEnAmt&'
         'coYnEps=$coYnEps&coStEps=$coStEps&coEnEps=$coEnEps&'
         'coYnPer=$coYnPer&coStPer=$coStPer&coEnPer=$coEnPer&'
-        'KEYB=&email=$email');
+        'KEYB=');
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/user_email.dart';
-import 'package:mockin/api/basic_api.dart';
-import 'package:mockin/dto/basic/news_request_dto.dart';
+import 'package:mockin/api/analysis_api.dart';
+import 'package:mockin/dto/analysis/news_request_dto.dart';
 import 'package:mockin/models/news_content_model.dart';
 import 'package:mockin/widgets/news.dart';
 
@@ -13,10 +12,8 @@ class NewsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: BasicApi.reqNews(
-          DTO: NewsRequestDTO(
-            email: UserEmail().getEmail()!,
-          ),
+        future: AnalysisApi.reqNews(
+          DTO: NewsRequestDTO(),
         ),
         builder: (context, snapshot) {
           if (snapshot.hasData) {

@@ -2,13 +2,11 @@ class NccsDTO {
   final String overseasExchangeCode,
       sortOrder,
       continuousSearchCondition200,
-      continuousSearchKey200,
-      email;
+      continuousSearchKey200;
 
   NccsDTO({
     required this.overseasExchangeCode,
     required this.sortOrder,
-    required this.email,
     this.continuousSearchCondition200 = '',
     this.continuousSearchKey200 = '',
   });
@@ -16,6 +14,6 @@ class NccsDTO {
   Uri convert(String baseUrl) {
     return Uri.parse(
         '$baseUrl?continuousSearchCondition200=$continuousSearchCondition200&continuousSearchKey200=$continuousSearchKey200&'
-        'email=$email&overseasExchangeCode=$overseasExchangeCode&sortOrder=$sortOrder');
+        'overseasExchangeCode=$overseasExchangeCode&sortOrder=$sortOrder');
   }
 }

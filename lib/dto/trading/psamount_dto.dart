@@ -1,15 +1,14 @@
 class PsamountDTO {
-  final String excd, symb, unitPrice, email;
+  final String excd, symb, unitPrice;
 
   PsamountDTO({
     required this.excd,
     required this.symb,
     required this.unitPrice,
-    required this.email,
   });
 
   Uri convert(String baseUrl) {
-    return Uri.parse('$baseUrl?email=$email&itemCode=$symb&'
+    return Uri.parse('$baseUrl?itemCode=$symb&'
         'overseasExchangeCode=$excd&overseasOrderUnitPrice=$unitPrice');
   }
 }

@@ -1,14 +1,12 @@
 class AcntNumRegisterDTO {
-  final String email, accountNumber;
+  final String accountNumber;
 
   AcntNumRegisterDTO({
-    required this.email,
     required this.accountNumber,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'email': email,
       'accountNumber': accountNumber,
     };
   }

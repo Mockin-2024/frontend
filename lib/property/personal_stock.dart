@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/present_balance_dto.dart';
 import 'package:mockin/models/personal_stock_item.dart';
@@ -34,7 +33,6 @@ class PersonalStock extends StatelessWidget {
             ExchangeTrans.orderTrade[ExchangeTrans.trade[trade]]!,
         transactionCurrencyCode:
             ExchangeTrans.transactionCurrency[ExchangeTrans.trade[trade]]!,
-        email: UserEmail().getEmail()!,
       ),
     );
     return Scaffold(
@@ -56,7 +54,6 @@ class PersonalStock extends StatelessWidget {
                       countryCode: '000',
                       marketCode: '00',
                       inquiryDivisionCode: '00',
-                      email: UserEmail().getEmail()!,
                     ),
                   ),
                   builder: (context, snapshot) {

@@ -1,14 +1,13 @@
 class CcnlDTO {
-  final String orderStartDate, orderEndDate, email;
+  final String orderStartDate, orderEndDate;
 
   CcnlDTO({
     required this.orderStartDate,
     required this.orderEndDate,
-    required this.email,
   });
 
   Uri convert(String baseUrl) {
     return Uri.parse(
-        '$baseUrl?email=$email&orderEndDate=$orderEndDate&orderStartDate=$orderStartDate');
+        '$baseUrl?orderEndDate=$orderEndDate&orderStartDate=$orderStartDate');
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/trading/ccnl_dto.dart';
 import 'package:mockin/dto/trading/nccs_dto.dart';
@@ -68,7 +67,6 @@ class OrderList extends StatelessWidget {
                         overseasExchangeCode: ExchangeTrans
                             .orderTrade[ExchangeTrans.trade[trade]]!,
                         sortOrder: 'DS',
-                        email: UserEmail().getEmail()!,
                       ),
                     ),
                     builder: (context, snapshot) {
@@ -119,7 +117,6 @@ class OrderList extends StatelessWidget {
                         orderStartDate: '20241010',
                         orderEndDate:
                             DateFormat('yyyyMMdd').format(DateTime.now()),
-                        email: UserEmail().getEmail()!,
                       ),
                     ),
                     builder: (context, snapshot) {

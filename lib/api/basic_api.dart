@@ -1,11 +1,12 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:http/http.dart' as http;
+import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/dto/basic/current_detailed_dto.dart';
 import 'package:mockin/dto/basic/current_price_dto.dart';
 import 'package:mockin/dto/basic/index_chart_dto.dart';
-import 'package:mockin/dto/basic/news_request_dto.dart';
+
 import 'package:mockin/dto/basic/payment_day_dto.dart';
 import 'package:mockin/dto/basic/stock_chart_dto.dart';
 import 'package:mockin/dto/basic/term_dto.dart';
@@ -14,20 +15,21 @@ import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:mockin/models/basic_stock_model.dart';
 import 'package:mockin/models/chart_data.dart';
-import 'package:mockin/models/news_content_model.dart';
+
+import 'package:mockin/storage/jwt_token.dart';
 
 class BasicApi {
   static const String baseUrl = 'https://api.mockin2024.com';
+  static const String quo = 'quotations';
   static const String basic = 'basic';
-  static const String search = 'search';
-  static const String current = 'current';
-  static const String term = 'term';
+  static const String search = 'inquire-search';
+  static const String current = 'price';
+  static const String term = 'inquire-daily-chartprice';
   static const String forYear = 'daily-chart-price';
   static const String paymentDay = 'countries-holiday';
   static const String cpd = 'price-detail';
-  static const String chart = 'item-chart-price';
-  static const String indexChart = 'index-chart-price';
-  static const String reqnews = 'news-title';
+  static const String chart = 'inquire-time-itemchartprice';
+  static const String indexChart = 'inquire-time-indexchartprice';
 
   // 조건검색 api
   static Future<List<BasicStockModel>> conditionSearch({
@@ -35,8 +37,10 @@ class BasicApi {
     required int opt,
   }) async {
     List<BasicStockModel> stockInstances = [];
-    final url = DTO.convert('$baseUrl/$basic/$search');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$search');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       final List<dynamic> stocks =
@@ -86,8 +90,10 @@ class BasicApi {
   static Future currentPrice({
     required CurrentPriceDTO DTO,
   }) async {
-    final url = DTO.convert('$baseUrl/$basic/$current');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$current');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['output']['ordy'];
@@ -101,8 +107,10 @@ class BasicApi {
     required int idx,
   }) async {
     List<String> clsPrice = [];
-    final url = DTO.convert('$baseUrl/$basic/$term');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$term');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       final List<dynamic> prices =
@@ -119,8 +127,10 @@ class BasicApi {
   static Future yearPrice({
     required YearDTO DTO,
   }) async {
-    final url = DTO.convert('$baseUrl/$basic/$term');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$term');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       print(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -133,8 +143,10 @@ class BasicApi {
   static Future getPaymentDay({
     required PaymentDayDTO DTO,
   }) async {
-    final url = DTO.convert('$baseUrl/$basic/$paymentDay');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$paymentDay');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       print(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -147,8 +159,10 @@ class BasicApi {
   static Future currentDetailed({
     required CurrentDetailedDTO DTO,
   }) async {
-    final url = DTO.convert('$baseUrl/$basic/$cpd');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$cpd');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       print(jsonDecode(utf8.decode(response.bodyBytes)));
@@ -163,8 +177,11 @@ class BasicApi {
     required int period,
   }) async {
     List<ChartData> datas = [];
-    Uri url = DTO.convert('$baseUrl/$basic/$chart');
-    var response = await http.get(url);
+    Uri url = DTO.convert('$baseUrl/$quo/$basic/$chart');
+    var response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
+
     if (response.statusCode == 200) {
       List<dynamic> bunbongs =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -186,7 +203,6 @@ class BasicApi {
           NMIN: DTO.NMIN,
           PINC: DTO.PINC,
           NREC: DTO.NREC,
-          email: DTO.email,
           NEXT: '1',
           KEYB: get_next_keyb(datas.last.dt, '1'),
         ).convert('$baseUrl/$basic/$chart');
@@ -237,36 +253,15 @@ class BasicApi {
   static Future minutesIndexChart({
     required IndexChartDTO DTO,
   }) async {
-    final url = DTO.convert('$baseUrl/$basic/$indexChart');
-    final response = await http.get(url);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$indexChart');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       print(jsonDecode(utf8.decode(response.bodyBytes)));
       return;
     }
     throw Error();
-  }
-
-  // 해외뉴스종합 api
-  static Future<List<NewsContentModel>> reqNews({
-    required NewsRequestDTO DTO,
-  }) async {
-    List<NewsContentModel> news = [];
-    final url = DTO.convert('$baseUrl/$basic/$reqnews');
-    final response = await http.get(url);
-
-    // print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
-    if (response.statusCode == 200) {
-      List<dynamic> newsblocks =
-          jsonDecode(utf8.decode(response.bodyBytes))['outblock1'];
-      for (var newsblock in newsblocks) {
-        news.add(
-          NewsContentModel.fromJson(newsblock),
-        );
-      }
-      return news;
-    }
-    print('failed');
-    return news;
   }
 }

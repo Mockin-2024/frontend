@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/psamount_dto.dart';
@@ -28,7 +27,6 @@ class BuyOrSell extends StatelessWidget {
         symb: stockSymb,
         orderQuantity: myController.text,
         overseasOrderUnitPrice: stockPrice,
-        email: UserEmail().getEmail()!,
       ),
     );
   }
@@ -40,7 +38,6 @@ class BuyOrSell extends StatelessWidget {
         symb: stockSymb,
         orderQuantity: myController.text,
         overseasOrderUnitPrice: sellM,
-        email: UserEmail().getEmail()!,
       ),
     );
   }
@@ -52,7 +49,6 @@ class BuyOrSell extends StatelessWidget {
       DTO: BalanceDTO(
         overseasExchangeCode: ExchangeTrans.orderTrade[excd]!,
         transactionCurrencyCode: ExchangeTrans.transactionCurrency[excd]!,
-        email: UserEmail().getEmail()!,
       ),
       stockName: stockName,
     );
@@ -187,10 +183,10 @@ class BuyOrSell extends StatelessWidget {
                           ? FutureBuilder(
                               future: TradeApi.psAmount(
                                 DTO: PsamountDTO(
-                                    excd: ExchangeTrans.orderTrade[excd]!,
-                                    symb: stockSymb,
-                                    unitPrice: stockPrice,
-                                    email: UserEmail().getEmail()!),
+                                  excd: ExchangeTrans.orderTrade[excd]!,
+                                  symb: stockSymb,
+                                  unitPrice: stockPrice,
+                                ),
                               ),
                               builder: (context, snapshot) {
                                 if (snapshot.hasData) {

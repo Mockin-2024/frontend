@@ -1,7 +1,7 @@
 class UserEmail {
   static final UserEmail _instance = UserEmail._internal();
 
-  String email = 'test1014@naver.com';
+  String email = '';
 
   factory UserEmail() {
     return _instance;

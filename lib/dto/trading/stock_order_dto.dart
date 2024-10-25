@@ -1,14 +1,13 @@
 import 'package:mockin/provider/exchange_trans.dart';
 
 class StockOrderDTO {
-  final String excd, symb, orderQuantity, overseasOrderUnitPrice, email;
+  final String excd, symb, orderQuantity, overseasOrderUnitPrice;
 
   StockOrderDTO({
     required this.excd,
     required this.symb,
     required this.orderQuantity,
     required this.overseasOrderUnitPrice,
-    required this.email,
   });
 
   Map<String, dynamic> toJson() {
@@ -18,7 +17,6 @@ class StockOrderDTO {
       "productNumber": symb,
       "orderQuantity": orderQuantity,
       "overseasOrderUnitPrice": overseasOrderUnitPrice,
-      "email": email,
     };
   }
 }

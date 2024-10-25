@@ -2,13 +2,11 @@ class BalanceDTO {
   final String overseasExchangeCode,
       transactionCurrencyCode,
       continuousSearchCondition200,
-      continuousSearchKey200,
-      email;
+      continuousSearchKey200;
 
   BalanceDTO({
     required this.overseasExchangeCode,
     required this.transactionCurrencyCode,
-    required this.email,
     this.continuousSearchCondition200 = '',
     this.continuousSearchKey200 = '',
   });
@@ -16,6 +14,6 @@ class BalanceDTO {
   Uri convert(String baseUrl) {
     return Uri.parse(
         '$baseUrl?continuousSearchCondition200=$continuousSearchCondition200&continuousSearchKey200=$continuousSearchKey200&'
-        'email=$email&overseasExchangeCode=$overseasExchangeCode&transactionCurrencyCode=$transactionCurrencyCode');
+        'overseasExchangeCode=$overseasExchangeCode&transactionCurrencyCode=$transactionCurrencyCode');
   }
 }

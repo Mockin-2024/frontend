@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/afterlogin/user_email.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';
@@ -153,7 +152,6 @@ class _SearchState extends State<Search> {
     final Future<List<BasicStockModel>> fetching = BasicApi.conditionSearch(
       DTO: ConditionSearchDTO(
         EXCD: ExchangeTrans.trade[trade]!,
-        email: UserEmail().getEmail()!,
       ),
       opt: 3,
     );
@@ -175,7 +173,9 @@ class _SearchState extends State<Search> {
                   ),
                 ),
                 suffixIcon: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      setState(() {});
+                    },
                     icon: const Icon(Icons.search_rounded,
                         size: 35, color: Colors.black)),
                 labelText: '검색어를 입력해주세요!',
@@ -210,7 +210,6 @@ class _SearchState extends State<Search> {
                     stocks = filtering(stocks);
                     return ListView.builder(
                         shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
                         padding: EdgeInsets.zero,
                         itemCount: stocks.length,
                         itemBuilder: (context, index) {

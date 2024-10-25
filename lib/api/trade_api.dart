@@ -12,6 +12,8 @@ import 'package:mockin/dto/trading/stock_order_dto.dart';
 import 'package:mockin/models/personal_stock_item.dart';
 import 'package:mockin/models/stock_breakdown.dart';
 import 'package:mockin/models/stock_own.dart';
+import 'package:mockin/storage/jwt_token.dart';
+import 'package:mockin/afterlogin/user_email.dart';
 
 class TradeApi {
   static const String baseUrl = 'https://api.mockin2024.com';
@@ -33,6 +35,8 @@ class TradeApi {
       url,
       headers: {
         'Content-type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -51,6 +55,8 @@ class TradeApi {
       url,
       headers: {
         'Content-type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -69,6 +75,8 @@ class TradeApi {
       url,
       headers: {
         'Content-type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -85,7 +93,9 @@ class TradeApi {
   }) async {
     List<String> tmp = [];
     final url = DTO.convert('$baseUrl/$trading/$psamount');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       final dynamic how = jsonDecode(utf8.decode(response.bodyBytes))['output'];
@@ -101,7 +111,9 @@ class TradeApi {
     required PresentBalanceDTO DTO,
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$pBalance');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['output3']
@@ -117,7 +129,9 @@ class TradeApi {
   }) async {
     List<PersonalStockItem> li = [];
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       List<dynamic> yours =
@@ -140,7 +154,9 @@ class TradeApi {
     required String stockName,
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       final List<dynamic> how =
@@ -162,7 +178,9 @@ class TradeApi {
     required String stockName,
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       final List<dynamic> how =
@@ -183,7 +201,9 @@ class TradeApi {
   }) async {
     List<StockBreakdown> nc = [];
     final url = DTO.convert('$baseUrl/$trading/$mcnj');
-    final response = await http.get(url);
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       List<dynamic> li = jsonDecode(utf8.decode(response.bodyBytes))['output'];
@@ -202,7 +222,9 @@ class TradeApi {
   }) async {
     List<StockOwn> nc = [];
     Uri url = DTO.convert('$baseUrl/$trading/$jmcn');
-    var response = await http.get(url);
+    var response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
 
     if (response.statusCode == 200) {
       // print('>>> 체결내역 조회 결과 : ${jsonDecode(utf8.decode(response.bodyBytes))}');

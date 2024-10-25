@@ -22,7 +22,6 @@ class InfoRegister extends StatelessWidget {
     if (accountNumber.text.isNotEmpty) {
       var tmp = await AccountApi.accountRegister(
         DTO: AcntNumRegisterDTO(
-          email: email,
           accountNumber: accountNumber.text,
         ),
       );
@@ -35,7 +34,6 @@ class InfoRegister extends StatelessWidget {
     if (mockAppkey.text.isNotEmpty && mockAppsecretkey.text.isNotEmpty) {
       var tmp = await AccountApi.mockKeyRegister(
         DTO: KeyPairRegisterDTO(
-          email: email,
           appKey: mockAppkey.text,
           appSecret: mockAppsecretkey.text,
         ),
@@ -49,7 +47,6 @@ class InfoRegister extends StatelessWidget {
     if (realAppkey.text.isNotEmpty && realAppsecretkey.text.isNotEmpty) {
       var tmp = await AccountApi.realKeyRegister(
         DTO: KeyPairRegisterDTO(
-          email: email,
           appKey: realAppkey.text,
           appSecret: realAppsecretkey.text,
         ),
@@ -115,7 +112,7 @@ class InfoRegister extends StatelessWidget {
             Center(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
                       builder: (context) => const WaitToken(),

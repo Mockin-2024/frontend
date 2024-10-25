@@ -1,8 +1,10 @@
 import 'package:http/http.dart' as http;
+import 'package:mockin/afterlogin/user_email.dart';
 import 'dart:convert';
 import 'package:mockin/dto/account/acnt_num_register_dto.dart';
 import 'package:mockin/dto/account/key_pair_register_dto.dart';
 import 'package:mockin/dto/account/user_email_dto.dart';
+import 'package:mockin/storage/jwt_token.dart';
 
 class AccountApi {
   static const String baseUrl = 'https://api.mockin2024.com';
@@ -24,6 +26,8 @@ class AccountApi {
       url,
       headers: {
         'Content-type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -43,6 +47,8 @@ class AccountApi {
       url,
       headers: {
         'Content-type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -62,6 +68,8 @@ class AccountApi {
       url,
       headers: {
         'Content-type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -81,9 +89,12 @@ class AccountApi {
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
-      body: jsonEncode(DTO.toJson()),
+      // body: jsonEncode(DTO.toJson()),
     );
+
     if (response.statusCode == 200) {
       print('>>> mockSocket Body: ${response.body}');
       return true;
@@ -100,8 +111,10 @@ class AccountApi {
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
-      body: jsonEncode(DTO.toJson()),
+      // body: jsonEncode(DTO.toJson()),
     );
     if (response.statusCode == 200) {
       print('>>> realSocket Body: ${response.body}');
@@ -119,8 +132,10 @@ class AccountApi {
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
-      body: jsonEncode(DTO.toJson()),
+      // body: jsonEncode(DTO.toJson()),
     );
     if (response.statusCode == 200) {
       print('>>> mockToken Body: ${response.body}');
@@ -138,8 +153,10 @@ class AccountApi {
       url,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
       },
-      body: jsonEncode(DTO.toJson()),
+      // body: jsonEncode(DTO.toJson()),
     );
     if (response.statusCode == 200) {
       print('>>> realToken Body: ${response.body}');
