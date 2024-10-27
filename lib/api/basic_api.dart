@@ -206,7 +206,10 @@ class BasicApi {
           NEXT: '1',
           KEYB: get_next_keyb(datas.last.dt, '1'),
         ).convert('$baseUrl/$basic/$chart');
-        response = await http.get(url);
+        response = await http.get(url, headers: {
+          'Authorization':
+              'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+        });
         if (response.statusCode == 200) {
           bunbongs = jsonDecode(utf8.decode(response.bodyBytes))['output2'];
           for (var bun in bunbongs) {

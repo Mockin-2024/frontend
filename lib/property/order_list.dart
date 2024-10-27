@@ -44,11 +44,11 @@ class OrderList extends StatelessWidget {
             ],
           ),
         ),
-        Center(
+        const Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Padding(
+              Padding(
                 padding: EdgeInsets.fromLTRB(40, 0, 0, 10),
                 child: Text(
                   '미체결',
@@ -59,38 +59,38 @@ class OrderList extends StatelessWidget {
                   ),
                 ),
               ),
-              mainContainer(
-                context,
-                FutureBuilder(
-                    future: TradeApi.nccs(
-                      DTO: NccsDTO(
-                        overseasExchangeCode: ExchangeTrans
-                            .orderTrade[ExchangeTrans.trade[trade]]!,
-                        sortOrder: 'DS',
-                      ),
-                    ),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        List<StockBreakdown> li = snapshot.data!;
-                        return ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemCount: li.length,
-                          itemBuilder: (context, index) {
-                            return Order(
-                              stockName: li[index].name,
-                              buySell: li[index].buyOrSell,
-                              date: li[index].odDate,
-                              time: li[index].odTime,
-                              amount: li[index].amount,
-                              price: li[index].price,
-                            );
-                          },
-                        );
-                      } else {
-                        return OneLine(A: '', B: '');
-                      }
-                    }),
-              ),
+              // mainContainer(
+              //   context,
+              //   FutureBuilder(
+              //       future: TradeApi.nccs(
+              //         DTO: NccsDTO(
+              //           overseasExchangeCode: ExchangeTrans
+              //               .orderTrade[ExchangeTrans.trade[trade]]!,
+              //           sortOrder: 'DS',
+              //         ),
+              //       ),
+              //       builder: (context, snapshot) {
+              //         if (snapshot.hasData) {
+              //           List<StockBreakdown> li = snapshot.data!;
+              //           return ListView.builder(
+              //             padding: EdgeInsets.zero,
+              //             itemCount: li.length,
+              //             itemBuilder: (context, index) {
+              //               return Order(
+              //                 stockName: li[index].name,
+              //                 buySell: li[index].buyOrSell,
+              //                 date: li[index].odDate,
+              //                 time: li[index].odTime,
+              //                 amount: li[index].amount,
+              //                 price: li[index].price,
+              //               );
+              //             },
+              //           );
+              //         } else {
+              //           return OneLine(A: '', B: '');
+              //         }
+              //       }),
+              // ),
             ],
           ),
         ),

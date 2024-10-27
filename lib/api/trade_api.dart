@@ -220,30 +220,50 @@ class TradeApi {
   static Future<List<StockOwn>> ccnl({
     required CcnlDTO DTO,
   }) async {
+    int i = 1;
+    dynamic jd = '';
+    String next, condition = '';
     List<StockOwn> nc = [];
     Uri url = DTO.convert('$baseUrl/$trading/$jmcn');
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
     if (response.statusCode == 200) {
-      // print('>>> 체결내역 조회 결과 : ${jsonDecode(utf8.decode(response.bodyBytes))}');
-      // print(
-      //     '>>> 체결내역 조회 결과 : ${jsonDecode(utf8.decode(response.bodyBytes))['ctx_area_fk200']}');
-      // print(
-      //     '>>> 체결내역 조회 결과 : ${jsonDecode(utf8.decode(response.bodyBytes))['ctx_area_nk200']}');
-      var jd = jsonDecode(utf8.decode(response.bodyBytes));
+      jd = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> li = jd['output'];
       for (var l in li) {
         nc.add(StockOwn.fromJson(l));
       }
-      // while (jd['ctx_area_nk200'] != '') {
-      //   url = CcnlDTO(
-      //           orderStartDate: DTO.orderStartDate,
-      //           orderEndDate: DTO.orderEndDate,
-      //           email: DTO.email)
-      //       .convert('$baseUrl/$trading/$jmcn');
-      // }
+      print('>>> $i $jd');
+      i++;
+      next = jd['ctx_area_nk200'] ?? '';
+      condition = jd['ctx_area_fk200'] ?? '';
+      while (
+          next.replaceAll(' ', '').isNotEmpty && response.statusCode == 200) {
+        url = CcnlDTO(
+          orderStartDate: DTO.orderStartDate,
+          orderEndDate: DTO.orderEndDate,
+          continuousSearchCondition200: condition.replaceAll(' ', ''),
+          continuousSearchKey200: next.replaceAll(' ', ''),
+        ).convert('$baseUrl/$trading/$jmcn');
+        response = await http.get(url, headers: {
+          'Authorization':
+              'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+        });
+        print('>>> $i ${jsonDecode(utf8.decode(response.bodyBytes))}');
+        if (response.statusCode == 200) {
+          jd = jsonDecode(utf8.decode(response.bodyBytes));
+
+          List<dynamic> li = jd['output'];
+          print('>>> $i $jd');
+          i++;
+          for (var l in li) {
+            nc.add(StockOwn.fromJson(l));
+          }
+        }
+        next = jd['ctx_area_nk200'] ?? '';
+        condition = jd['ctx_area_fk200'] ?? '';
+      }
       return nc;
     }
     print('>>> failed');
