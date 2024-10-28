@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/trading/ccnl_dto.dart';
-import 'package:mockin/dto/trading/nccs_dto.dart';
-import 'package:mockin/models/stock_breakdown.dart';
 import 'package:mockin/models/stock_own.dart';
-import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/widgets/exchange.dart';
 import 'package:mockin/widgets/main_container.dart';
 import 'package:mockin/widgets/one_line.dart';
 import 'package:mockin/widgets/order.dart';
-import 'package:provider/provider.dart';
-import 'package:mockin/provider/exchange_provider.dart';
 import 'package:intl/intl.dart';
 
 class OrderList extends StatelessWidget {
@@ -20,7 +15,6 @@ class OrderList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
     return Scaffold(
         body: SingleChildScrollView(
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -59,38 +53,6 @@ class OrderList extends StatelessWidget {
                   ),
                 ),
               ),
-              // mainContainer(
-              //   context,
-              //   FutureBuilder(
-              //       future: TradeApi.nccs(
-              //         DTO: NccsDTO(
-              //           overseasExchangeCode: ExchangeTrans
-              //               .orderTrade[ExchangeTrans.trade[trade]]!,
-              //           sortOrder: 'DS',
-              //         ),
-              //       ),
-              //       builder: (context, snapshot) {
-              //         if (snapshot.hasData) {
-              //           List<StockBreakdown> li = snapshot.data!;
-              //           return ListView.builder(
-              //             padding: EdgeInsets.zero,
-              //             itemCount: li.length,
-              //             itemBuilder: (context, index) {
-              //               return Order(
-              //                 stockName: li[index].name,
-              //                 buySell: li[index].buyOrSell,
-              //                 date: li[index].odDate,
-              //                 time: li[index].odTime,
-              //                 amount: li[index].amount,
-              //                 price: li[index].price,
-              //               );
-              //             },
-              //           );
-              //         } else {
-              //           return OneLine(A: '', B: '');
-              //         }
-              //       }),
-              // ),
             ],
           ),
         ),

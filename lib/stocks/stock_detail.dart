@@ -12,7 +12,7 @@ import 'package:fl_chart/fl_chart.dart';
 // import 'package:mockin/widgets/news.dart';
 
 class StockDetail extends StatefulWidget {
-  final String excd, stockName, stockSymb, stockPrice, stockRate;
+  final String excd, stockName, stockSymb, stockPrice;
 
   const StockDetail({
     super.key,
@@ -20,7 +20,6 @@ class StockDetail extends StatefulWidget {
     required this.stockName,
     required this.stockSymb,
     required this.stockPrice,
-    required this.stockRate,
   });
 
   @override
@@ -30,6 +29,7 @@ class StockDetail extends StatefulWidget {
 class _StockDetailState extends State<StockDetail> {
   List<bool> isSelected = [true, false, false, false, false, false];
   final List<String> dayGap = ['1일', '1주', '1달', '3달', '1년', '5년'];
+  double rate = 0.0;
 
   final Map<String, List<dynamic>> gapGUBN = {
     '1일': ['0', 1],
@@ -52,6 +52,7 @@ class _StockDetailState extends State<StockDetail> {
   @override
   Widget build(BuildContext context) {
     var seletedGap = dayGap[isSelected.indexOf(true)];
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -104,7 +105,7 @@ class _StockDetailState extends State<StockDetail> {
                               var pastPrice = snapshot.data;
                               var diff = double.parse(widget.stockPrice) -
                                   double.parse(pastPrice);
-                              var rate = diff / double.parse(pastPrice) * 100;
+                              rate = diff / double.parse(pastPrice) * 100;
                               var sign =
                                   ExchangeTrans.signExchange[widget.excd];
                               return Row(
@@ -117,8 +118,8 @@ class _StockDetailState extends State<StockDetail> {
                                   ),
                                   Text(
                                     diff > 0
-                                        ? '+${diff.toStringAsFixed(1)}$sign (${rate.toStringAsFixed(1)}%)'
-                                        : '${diff.toStringAsFixed(1)}$sign (${rate.toStringAsFixed(1)}%)',
+                                        ? '+${diff.toStringAsFixed(2)}$sign (${rate.toStringAsFixed(2)}%)'
+                                        : '${diff.toStringAsFixed(2)}$sign (${rate.toStringAsFixed(2)}%)',
                                     style: TextStyle(
                                       color:
                                           diff > 0 ? Colors.red : Colors.blue,
@@ -311,6 +312,7 @@ class _StockDetailState extends State<StockDetail> {
                         return BuySellButton(
                           widget: widget,
                           buySell: '판매',
+                          rate: rate.toStringAsFixed(2),
                           bs: false,
                           have: true,
                         );
@@ -319,13 +321,19 @@ class _StockDetailState extends State<StockDetail> {
                     return BuySellButton(
                       widget: widget,
                       buySell: '판매',
+                      rate: rate.toStringAsFixed(2),
                       bs: false,
                       have: false,
                     );
                   },
                 ),
                 BuySellButton(
-                    widget: widget, buySell: '구매', bs: true, have: true),
+                  widget: widget,
+                  buySell: '구매',
+                  rate: rate.toStringAsFixed(2),
+                  bs: true,
+                  have: true,
+                ),
               ],
             ),
           ],
@@ -340,12 +348,13 @@ class BuySellButton extends StatelessWidget {
     super.key,
     required this.widget,
     required this.buySell,
+    required this.rate,
     required this.bs,
     required this.have,
   });
 
   final StockDetail widget;
-  final String buySell;
+  final String buySell, rate;
   final bool bs, have;
 
   @override
@@ -361,7 +370,7 @@ class BuySellButton extends StatelessWidget {
                     stockName: widget.stockName,
                     stockSymb: widget.stockSymb,
                     stockPrice: widget.stockPrice,
-                    stockRate: widget.stockRate,
+                    stockRate: rate,
                     buy: bs,
                   ),
                 ),

@@ -3,7 +3,6 @@ import 'package:mockin/afterlogin/user_email.dart';
 import 'dart:convert';
 import 'package:mockin/dto/account/acnt_num_register_dto.dart';
 import 'package:mockin/dto/account/key_pair_register_dto.dart';
-import 'package:mockin/dto/account/user_email_dto.dart';
 import 'package:mockin/storage/jwt_token.dart';
 
 class AccountApi {
@@ -12,10 +11,6 @@ class AccountApi {
   static const String user = 'user';
   static const String mock = 'mock-key';
   static const String real = 'real-key';
-  static const String mockWebSocket = 'mock-approval-key';
-  static const String realWebSocket = 'real-approval-key';
-  static const String mockToken = 'mock-token';
-  static const String realToken = 'real-token';
 
   // 모의계좌 번호 등록 api
   static Future accountRegister({
@@ -75,91 +70,6 @@ class AccountApi {
     );
     // print('>>> ${response.statusCode}');
     if (response.statusCode == 200) {
-      return true;
-    }
-    return false;
-  }
-
-  // 모의 웹소켓 키 get api
-  static Future getMockSocketKey({
-    required UserEmailDTO DTO,
-  }) async {
-    final url = Uri.parse('$baseUrl/$account/$mockWebSocket');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
-      },
-      // body: jsonEncode(DTO.toJson()),
-    );
-
-    if (response.statusCode == 200) {
-      print('>>> mockSocket Body: ${response.body}');
-      return true;
-    }
-    return false;
-  }
-
-  // 실전 웹소켓 키 get api
-  static Future getRealSocketKey({
-    required UserEmailDTO DTO,
-  }) async {
-    final url = Uri.parse('$baseUrl/$account/$realWebSocket');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
-      },
-      // body: jsonEncode(DTO.toJson()),
-    );
-    if (response.statusCode == 200) {
-      print('>>> realSocket Body: ${response.body}');
-      return true;
-    }
-    return false;
-  }
-
-  // 모의 토큰 get api
-  static Future getMockToken({
-    required UserEmailDTO DTO,
-  }) async {
-    final url = Uri.parse('$baseUrl/$account/$mockToken');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
-      },
-      // body: jsonEncode(DTO.toJson()),
-    );
-    if (response.statusCode == 200) {
-      print('>>> mockToken Body: ${response.body}');
-      return true;
-    }
-    return false;
-  }
-
-  // 실전 토큰 get api
-  static Future getRealToken({
-    required UserEmailDTO DTO,
-  }) async {
-    final url = Uri.parse('$baseUrl/$account/$realToken');
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
-      },
-      // body: jsonEncode(DTO.toJson()),
-    );
-    if (response.statusCode == 200) {
-      print('>>> realToken Body: ${response.body}');
       return true;
     }
     return false;

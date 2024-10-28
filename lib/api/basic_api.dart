@@ -24,7 +24,8 @@ class BasicApi {
   static const String basic = 'basic';
   static const String search = 'inquire-search';
   static const String current = 'price';
-  static const String term = 'inquire-daily-chartprice';
+  static const String term = 'daily-price';
+  static const String jjh = 'inquire-daily-chartprice';
   static const String forYear = 'daily-chart-price';
   static const String paymentDay = 'countries-holiday';
   static const String cpd = 'price-detail';
@@ -127,7 +128,7 @@ class BasicApi {
   static Future yearPrice({
     required YearDTO DTO,
   }) async {
-    final url = DTO.convert('$baseUrl/$quo/$basic/$term');
+    final url = DTO.convert('$baseUrl/$quo/$basic/$jjh');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });

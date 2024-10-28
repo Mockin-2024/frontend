@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/afterlogin/navi.dart';
-import 'package:mockin/api/account_api.dart';
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/api/oauth2_api.dart';
 import 'package:mockin/dto/account/user_email_dto.dart';
 
 class WaitToken extends StatefulWidget {
@@ -12,13 +11,12 @@ class WaitToken extends StatefulWidget {
 }
 
 class _WaitTokenState extends State<WaitToken> {
-  String email = UserEmail().getEmail()!;
   bool isLoading = true;
 
   Future<void> mockSocketKey() async {
-    var tmp = await AccountApi.getMockSocketKey(
+    var tmp = await Oauth2Api.getMockSocketKey(
         DTO: UserEmailDTO(
-      email: email,
+      email: '',
     ));
     if (tmp) {
       print('>>> mock web success');
@@ -28,9 +26,9 @@ class _WaitTokenState extends State<WaitToken> {
   }
 
   Future<void> realSocketKey() async {
-    var tmp = await AccountApi.getRealSocketKey(
+    var tmp = await Oauth2Api.getRealSocketKey(
         DTO: UserEmailDTO(
-      email: email,
+      email: '',
     ));
     if (tmp) {
       print('>>> real web success');
@@ -40,9 +38,9 @@ class _WaitTokenState extends State<WaitToken> {
   }
 
   Future<void> mockToken() async {
-    var tmp = await AccountApi.getMockToken(
+    var tmp = await Oauth2Api.getMockToken(
         DTO: UserEmailDTO(
-      email: email,
+      email: '',
     ));
     if (tmp) {
       print('>>> mock token success');
@@ -52,9 +50,9 @@ class _WaitTokenState extends State<WaitToken> {
   }
 
   Future<void> realToken() async {
-    var tmp = await AccountApi.getRealToken(
+    var tmp = await Oauth2Api.getRealToken(
         DTO: UserEmailDTO(
-      email: email,
+      email: '',
     ));
     if (tmp) {
       print('>>> real token success');

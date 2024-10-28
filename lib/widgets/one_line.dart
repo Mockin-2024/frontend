@@ -34,9 +34,9 @@ class OneLine extends StatelessWidget {
           B,
           style: TextStyle(
             color: bIsNum
-                ? B.contains('+')
-                    ? Colors.red
-                    : Colors.blue
+                ? B.contains('-')
+                    ? Colors.blue
+                    : Colors.red
                 : Colors.black,
           ),
         ),

@@ -42,7 +42,6 @@ class BaseRank extends StatelessWidget {
                   stockName: stockName,
                   stockSymb: stockSymb,
                   stockPrice: stockPrice,
-                  stockRate: stockRate,
                 ),
               ),
             );

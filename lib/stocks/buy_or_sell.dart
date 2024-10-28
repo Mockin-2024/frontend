@@ -10,6 +10,7 @@ class BuyOrSell extends StatelessWidget {
   final String excd, stockName, stockSymb, stockPrice, stockRate;
   final bool buy;
   final myController = TextEditingController();
+  final userEnteredPrice = TextEditingController();
 
   BuyOrSell(
       {super.key,
@@ -26,7 +27,7 @@ class BuyOrSell extends StatelessWidget {
         excd: excd,
         symb: stockSymb,
         orderQuantity: myController.text,
-        overseasOrderUnitPrice: stockPrice,
+        overseasOrderUnitPrice: userEnteredPrice.text,
       ),
     );
   }
@@ -37,7 +38,7 @@ class BuyOrSell extends StatelessWidget {
         excd: excd,
         symb: stockSymb,
         orderQuantity: myController.text,
-        overseasOrderUnitPrice: sellM,
+        overseasOrderUnitPrice: userEnteredPrice.text,
       ),
     );
   }
@@ -53,6 +54,7 @@ class BuyOrSell extends StatelessWidget {
       stockName: stockName,
     );
     var sign = ExchangeTrans.signExchange[excd];
+    userEnteredPrice.text = stockPrice;
     return Scaffold(
       body: Column(
         children: [
@@ -73,7 +75,7 @@ class BuyOrSell extends StatelessWidget {
                   Text(
                     '$stockPrice$sign  $stockRate%',
                     style: TextStyle(
-                      color: stockRate[0] == '+' ? Colors.red : Colors.blue,
+                      color: stockRate[0] == '-' ? Colors.blue : Colors.red,
                     ),
                   ),
                 ],
@@ -105,13 +107,17 @@ class BuyOrSell extends StatelessWidget {
                         height: 10,
                       ),
                       buy
-                          ? Text(
-                              '$stockPrice$sign',
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
+                          ? TextField(
+                              decoration: InputDecoration(
+                                border: const OutlineInputBorder(),
+                                labelText: '구매 가격',
+                                suffix: Text(
+                                  '$sign',
+                                  style: const TextStyle(color: Colors.black),
+                                ),
                               ),
+                              keyboardType: TextInputType.number,
+                              controller: userEnteredPrice,
                             )
                           : FutureBuilder(
                               future: stockData,
@@ -119,13 +125,19 @@ class BuyOrSell extends StatelessWidget {
                                 if (snapshot.hasData) {
                                   sellMoney = double.parse(snapshot.data!.first)
                                       .toStringAsFixed(1);
-                                  return Text(
-                                    '$sellMoney$sign',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
+                                  userEnteredPrice.text = sellMoney;
+                                  return TextField(
+                                    decoration: InputDecoration(
+                                      border: const OutlineInputBorder(),
+                                      labelText: '판매 가격',
+                                      suffix: Text(
+                                        '$sign',
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
                                     ),
+                                    keyboardType: TextInputType.number,
+                                    controller: userEnteredPrice,
                                   );
                                 } else {
                                   return const Text(
