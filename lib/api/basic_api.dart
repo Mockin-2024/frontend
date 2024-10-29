@@ -206,7 +206,7 @@ class BasicApi {
           NREC: DTO.NREC,
           NEXT: '1',
           KEYB: get_next_keyb(datas.last.dt, '1'),
-        ).convert('$baseUrl/$basic/$chart');
+        ).convert('$baseUrl/$quo/$basic/$chart');
         response = await http.get(url, headers: {
           'Authorization':
               'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
