@@ -18,14 +18,10 @@ class BaseRank extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Colors.black,
-          width: 1.0,
-        ),
+      width: MediaQuery.of(context).size.width * 0.8,
+      margin: const EdgeInsets.symmetric(vertical: 5),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -46,12 +42,34 @@ class BaseRank extends StatelessWidget {
               ),
             );
           },
-          child: Column(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              OneLine(
-                  A: stockName,
-                  B: '$stockPrice${ExchangeTrans.signExchange[excd]}'),
-              OneLine(A: '', B: '$stockRate%', bIsNum: true),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: Text(
+                  stockName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w600),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    '$stockPrice${ExchangeTrans.signExchange[excd]}',
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                  Text(
+                    '$stockRate%',
+                    style: TextStyle(
+                        color:
+                            stockRate.contains('-') ? Colors.blue : Colors.red),
+                  ),
+                ],
+              )
             ],
           ),
         ),

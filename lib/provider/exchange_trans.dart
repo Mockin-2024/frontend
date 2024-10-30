@@ -82,5 +82,21 @@ class ExchangeTrans {
     'HNX': 'VND',
     'TSE': 'JPY',
   };
+
+  static Map<String, String> nationCode = {
+    'US': '미국',
+    'CN': '중국',
+    'HK': '홍콩',
+    'JP': '일본',
+    'VN': '베트남',
+  };
+
+  static Map<int, String> optToString = {
+    1: '거래대금',
+    2: '거래량',
+    3: '시가총액',
+    4: '급상승',
+    5: '급하락',
+  };
   // '나스닥', '뉴욕', '홍콩', '아멕스', '상해', '심천', '호치민', '하노이', '도쿄'
 }
