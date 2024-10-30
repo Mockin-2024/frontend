@@ -119,7 +119,7 @@ class PersonalStock extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const OrderList(),
+                    builder: (context) => OrderList(),
                   ),
                 );
               },
