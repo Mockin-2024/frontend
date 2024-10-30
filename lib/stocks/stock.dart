@@ -15,6 +15,17 @@ class Stock extends StatefulWidget {
 }
 
 class _StockState extends State<Stock> {
+  final _ranking = ['거래대금', '거래량', '시가총액', '급상승', '급하락'];
+  var _selectedRank = '거래대금';
+
+  Map<String, int> trans = {
+    '거래대금': 1,
+    '거래량': 2,
+    '시가총액': 3,
+    '급상승': 4,
+    '급하락': 5,
+  };
+
   @override
   Widget build(BuildContext context) {
     var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
@@ -42,25 +53,35 @@ class _StockState extends State<Stock> {
                   vertical: 8,
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      '추천 종목',
+                      '실시간 차트',
                       style: TextStyle(
                         color: Theme.of(context).textTheme.bodySmall!.color,
                         fontSize: 18,
                       ),
                     ),
+                    DropdownButton(
+                        value: _selectedRank,
+                        items: _ranking.map((value) {
+                          return DropdownMenuItem(
+                            value: value,
+                            child: Text(value),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedRank = value!;
+                          });
+                        }),
                   ],
                 ),
               ),
               const SizedBox(
                 height: 5,
               ),
-              mainContainer(
-                context,
-                rankContent(trade, 3),
-              ),
+              RankContent(trade: trade, opt: trans[_selectedRank]!),
             ]),
             Column(children: [
               const SizedBox(
@@ -86,10 +107,7 @@ class _StockState extends State<Stock> {
               const SizedBox(
                 height: 5,
               ),
-              mainContainer(
-                context,
-                const NewsWidget(),
-              ),
+              const NewsWidget(),
             ]),
           ],
         ),

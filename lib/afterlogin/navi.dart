@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/property/personal_stock.dart';
 import 'package:mockin/stocks/stock.dart';
-import 'package:mockin/stocks/stock_can_invest.dart';
+import 'package:mockin/stocks/stock_how_invest.dart';
 
 class Navi extends StatelessWidget {
   const Navi({super.key});
@@ -14,7 +14,7 @@ class Navi extends StatelessWidget {
       child: Scaffold(
         body: const TabBarView(
           children: [
-            StockCanInvest(),
+            StockHowInvest(),
             Stock(),
             PersonalStock(),
           ],
@@ -26,14 +26,14 @@ class Navi extends StatelessWidget {
           tabs: const [
             Tab(
               icon: Icon(
-                Icons.bar_chart_sharp,
+                Icons.info_outline,
                 size: 40,
               ),
-              text: 'investment',
+              text: 'info',
             ),
             Tab(
               icon: Icon(
-                Icons.home,
+                Icons.bar_chart_sharp,
                 size: 40,
               ),
               text: 'home',
