@@ -3,7 +3,6 @@ import 'package:mockin/widgets/search_button.dart';
 import 'package:mockin/widgets/exchange.dart';
 import 'package:mockin/widgets/news_widget.dart';
 import 'package:mockin/provider/exchange_provider.dart';
-import 'package:mockin/widgets/main_container.dart';
 import 'package:provider/provider.dart';
 import 'package:mockin/widgets/rank_content.dart';
 

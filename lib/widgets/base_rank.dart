@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/stocks/stock_detail.dart';
-import 'package:mockin/widgets/one_line.dart';
 
 class BaseRank extends StatelessWidget {
   final String excd, stockName, stockSymb, stockPrice, stockRate;
