@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/widgets/one_line.dart';
 
 class News extends StatelessWidget {
@@ -16,27 +17,29 @@ class News extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(5.0),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 255, 255, 255),
-        borderRadius: BorderRadius.circular(15),
-        border: Border.all(
-          color: Colors.black,
-          width: 1.0,
-        ),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: const BoxDecoration(
+        color: Color.fromARGB(255, 255, 255, 255),
       ),
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 20,
           vertical: 5,
         ),
-        child: Column(
-          children: [
-            OneLine(A: newsTitle, B: ''),
-            OneLine(A: country, B: stockName),
-            OneLine(A: newsDay, B: newsTime),
-          ],
-        ),
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            newsTitle,
+            maxLines: 2,
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          OneLine(
+              A: ExchangeTrans.nationCode[country]!,
+              B: '${newsDay.substring(4, 6)}월 ${newsDay.substring(6, 8)}일 ${newsTime.substring(0, 2)}:${newsTime.substring(2, 4)}'),
+        ]),
       ),
     );
   }
