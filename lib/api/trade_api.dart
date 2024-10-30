@@ -9,9 +9,9 @@ import 'package:mockin/dto/trading/present_balance_dto.dart';
 import 'package:mockin/dto/trading/psamount_dto.dart';
 import 'dart:convert';
 import 'package:mockin/dto/trading/stock_order_dto.dart';
+import 'package:mockin/models/order_model.dart';
 import 'package:mockin/models/personal_stock_item.dart';
 import 'package:mockin/models/stock_breakdown.dart';
-import 'package:mockin/models/stock_own.dart';
 import 'package:mockin/storage/jwt_token.dart';
 import 'package:mockin/afterlogin/user_email.dart';
 
@@ -40,6 +40,7 @@ class TradeApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
+    print('>>> 매수 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['msg1'] ?? '매수 주문 완료';
     }
@@ -60,6 +61,7 @@ class TradeApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
+    print('>>> 매도 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['msg1'] ?? '매도 주문 완료';
     }
@@ -80,7 +82,7 @@ class TradeApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
-
+    print('>>> 정정취소 주문 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return true;
     }
@@ -96,7 +98,7 @@ class TradeApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
+    print('>>> 매수가능금액조회 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final dynamic how = jsonDecode(utf8.decode(response.bodyBytes))['output'];
       tmp.add(how['frcr_ord_psbl_amt1']);
@@ -114,7 +116,7 @@ class TradeApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
+    print('>>> 체결기준현재잔고 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['output3']
           ['tot_asst_amt'];
@@ -132,7 +134,7 @@ class TradeApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
+    print('>>> 잔고 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       List<dynamic> yours =
           jsonDecode(utf8.decode(response.bodyBytes))['output1'];
@@ -157,7 +159,7 @@ class TradeApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
+    print('>>> 보유 주식 확인(잔고) ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> how =
           jsonDecode(utf8.decode(response.bodyBytes))['output1'];
@@ -181,7 +183,8 @@ class TradeApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
+    print(
+        '>>> 매입 평균 가격/보유 수량(잔고) ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> how =
           jsonDecode(utf8.decode(response.bodyBytes))['output1'];
@@ -217,25 +220,29 @@ class TradeApi {
   }
 
   // 주문체결 내역 api
-  static Future<List<StockOwn>> ccnl({
+  static Future<List<OrderModel>> ccnl({
     required CcnlDTO DTO,
   }) async {
-    int i = 1;
     dynamic jd = '';
     String next, condition = '';
-    List<StockOwn> nc = [];
+    List<OrderModel> orders = [];
     Uri url = DTO.convert('$baseUrl/$trading/$jmcn');
     var response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
+    print('>>> 체결내역 조회 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       jd = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> li = jd['output'];
       for (var l in li) {
-        nc.add(StockOwn.fromJson(l));
+        if (l['nccs_qty'] == '0') {
+          // 미체결
+          orders.add(OrderModel.fromJson1(l));
+        } else {
+          // 체결
+          orders.add(OrderModel.fromJson2(l));
+        }
       }
-      print('>>> $i $jd');
-      i++;
       next = jd['ctx_area_nk200'] ?? '';
       condition = jd['ctx_area_fk200'] ?? '';
       while (
@@ -245,28 +252,32 @@ class TradeApi {
           orderEndDate: DTO.orderEndDate,
           continuousSearchCondition200: condition.replaceAll(' ', ''),
           continuousSearchKey200: next.replaceAll(' ', ''),
+          transactionContinuation: 'N',
         ).convert('$baseUrl/$trading/$jmcn');
         response = await http.get(url, headers: {
           'Authorization':
               'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
         });
-        print('>>> $i ${jsonDecode(utf8.decode(response.bodyBytes))}');
         if (response.statusCode == 200) {
           jd = jsonDecode(utf8.decode(response.bodyBytes));
 
           List<dynamic> li = jd['output'];
-          print('>>> $i $jd');
-          i++;
           for (var l in li) {
-            nc.add(StockOwn.fromJson(l));
+            if (l['nccs_qty'] == '0') {
+              // 미체결
+              orders.add(OrderModel.fromJson1(l));
+            } else {
+              // 체결
+              orders.add(OrderModel.fromJson2(l));
+            }
           }
         }
         next = jd['ctx_area_nk200'] ?? '';
         condition = jd['ctx_area_fk200'] ?? '';
       }
-      return nc;
+      return orders;
     }
     print('>>> failed');
-    return nc;
+    return orders;
   }
 }
