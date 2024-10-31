@@ -22,7 +22,15 @@ class TextInput extends StatelessWidget {
         key: Key(name),
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+          ),
           labelText: name,
+          labelStyle: const TextStyle(
+            color: Colors.black,
+          ),
           enabled: isChecking,
         ),
         keyboardType: TextInputType.text,

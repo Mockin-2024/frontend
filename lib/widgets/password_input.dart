@@ -30,7 +30,15 @@ class _PasswordInputState extends State<PasswordInput> {
         decoration: InputDecoration(
           enabled: widget.isChecking,
           border: const OutlineInputBorder(),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.black,
+            ),
+          ),
           labelText: widget.name,
+          labelStyle: const TextStyle(
+            color: Colors.black,
+          ),
           suffixIcon: IconButton(
               icon: Icon(
                 _notShowing ? Icons.visibility_off : Icons.visibility,
