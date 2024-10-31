@@ -134,11 +134,11 @@ class _SearchState extends State<Search> {
             double.parse(basic.tvol) > double.parse(tradevolumeMax)) {
           continue;
         }
-        if (searchWord.text.isNotEmpty) {
-          if (!basic.name.contains(searchWord.text) &&
-              !basic.symb.contains(searchWord.text)) {
-            continue;
-          }
+      }
+      if (searchWord.text.isNotEmpty) {
+        if (!basic.name.contains(searchWord.text) &&
+            !basic.symb.contains(searchWord.text)) {
+          continue;
         }
       }
       meetConditions.add(basic);
@@ -165,6 +165,9 @@ class _SearchState extends State<Search> {
               horizontal: 25,
             ),
             child: TextField(
+              onChanged: (value) {
+                setState(() {});
+              },
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 focusedBorder: const OutlineInputBorder(
