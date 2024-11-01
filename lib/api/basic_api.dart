@@ -42,7 +42,7 @@ class BasicApi {
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-    print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> stocks =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
