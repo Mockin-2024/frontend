@@ -23,6 +23,18 @@ class ExchangeTrans {
     'TSE': 'TKSE',
   };
 
+  static Map<String, String> orderTradeReverse = {
+    'NASD': 'NAS',
+    'NYSE': 'NYS',
+    'SEHK': 'HKS',
+    'AMEX': 'AMS',
+    'SHAA': 'SHS',
+    'SZAA': 'SZS',
+    'VNSE': 'HSX',
+    'HASE': 'HNX',
+    'TKSE': 'TSE',
+  };
+
   static Map<String, String> buyOrder = {
     'NAS': 'VTTT1002U',
     'NYS': 'VTTT1002U',
@@ -45,6 +57,18 @@ class ExchangeTrans {
     'HSX': 'VTTS0310U',
     'HNX': 'VTTS0310U',
     'TSE': 'VTTS0307U',
+  };
+
+  static Map<String, String> canCorTrans = {
+    'NAS': 'VTTT1004U',
+    'NYS': 'VTTT1004U',
+    'AMS': 'VTTT1004U',
+    'HKS': 'VTTS1003U',
+    'SHS': 'VTTS0302U',
+    'SZS': 'VTTS0306U',
+    'HSX': 'VTTS0312U',
+    'HNX': 'VTTS0312U',
+    'TSE': 'VTTS0309U',
   };
 
   static Map<String, String> sign = {

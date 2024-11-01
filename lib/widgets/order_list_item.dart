@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/property/order_detailed.dart';
+import 'package:mockin/provider/exchange_trans.dart';
 
 class OrderListItem extends StatelessWidget {
   const OrderListItem({
@@ -42,27 +44,71 @@ class OrderListItem extends StatelessWidget {
           horizontal: 20,
           vertical: 5,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(orderDate, style: const TextStyle(color: Colors.black)),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('$signed($buyOrSell)',
-                    style: const TextStyle(color: Colors.black)),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: 150,
-                  child: Text(
-                    name,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.black),
+        child: GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => OrderDetailed(
+                  name: name,
+                  excd: excd,
+                  symb: symb,
+                  orderNum: orderNum,
+                  buyOrSell: buyOrSell,
+                  orderDate: orderDate,
+                  orderTime: orderTime,
+                  originOrderNum: originOrderNum,
+                  price: price,
+                  amount: amount,
+                  currency: currency,
+                  signed: signed,
+                ),
+              ),
+            );
+          },
+          child: Table(columnWidths: const {
+            0: FlexColumnWidth(1),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(1),
+          }, children: [
+            TableRow(children: [
+              TableCell(
+                child: Column(
+                  children: [
+                    Text('$orderDate  ',
+                        style: const TextStyle(color: Colors.black)),
+                    const SizedBox(height: 5),
+                    Text('$signed/$buyOrSell  ',
+                        style: const TextStyle(color: Colors.black)),
+                  ],
+                ),
+              ),
+              TableCell(
+                child: Text(
+                  name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ],
-            ),
-          ],
+              ),
+              TableCell(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('$amount주',
+                        style: const TextStyle(color: Colors.black)),
+                    Text(
+                        '${double.parse(price).toStringAsFixed(3)}${ExchangeTrans.signExchange[ExchangeTrans.orderTradeReverse[excd]]}',
+                        style: const TextStyle(color: Colors.black)),
+                  ],
+                ),
+              ),
+            ]),
+          ]),
         ),
       ),
     );

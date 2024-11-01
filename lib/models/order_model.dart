@@ -12,23 +12,8 @@ class OrderModel {
       currency, // 통화 코드
       signed; // 체결/미체결
 
-  // 미체결
-  OrderModel.fromJson1(Map<String, dynamic> json)
-      : name = json['prdt_name'],
-        excd = json['ovrs_excg_cd'],
-        symb = json['pdno'],
-        orderNum = json['odno'],
-        buyOrSell = json['sll_buy_dvsn_cd_name'],
-        orderDate = json['dmst_ord_dt'],
-        orderTime = json['thco_ord_tmd'],
-        originOrderNum = json['orgn_odno'],
-        price = json['ft_ord_unpr3'],
-        amount = json['nccs_qty'],
-        currency = json['tr_crcy_cd'],
-        signed = '미체결';
-
   // 체결
-  OrderModel.fromJson2(Map<String, dynamic> json)
+  OrderModel.fromJson1(Map<String, dynamic> json)
       : name = json['prdt_name'],
         excd = json['ovrs_excg_cd'],
         symb = json['pdno'],
@@ -41,4 +26,19 @@ class OrderModel {
         amount = json['ft_ccld_qty'],
         currency = json['tr_crcy_cd'],
         signed = '체결';
+
+  // 미체결
+  OrderModel.fromJson2(Map<String, dynamic> json)
+      : name = json['prdt_name'],
+        excd = json['ovrs_excg_cd'],
+        symb = json['pdno'],
+        orderNum = json['odno'],
+        buyOrSell = json['sll_buy_dvsn_cd_name'],
+        orderDate = json['dmst_ord_dt'],
+        orderTime = json['thco_ord_tmd'],
+        originOrderNum = json['orgn_odno'],
+        price = json['ft_ord_unpr3'],
+        amount = json['nccs_qty'],
+        currency = json['tr_crcy_cd'],
+        signed = '미체결';
 }

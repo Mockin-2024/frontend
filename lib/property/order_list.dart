@@ -12,7 +12,7 @@ class OrderList extends StatelessWidget {
 
   final Future<List<OrderModel>> fetchData = TradeApi.ccnl(
     DTO: CcnlDTO(
-      orderStartDate: '20241010',
+      orderStartDate: '20241023',
       orderEndDate: DateFormat('yyyyMMdd').format(DateTime.now()),
     ),
   );
