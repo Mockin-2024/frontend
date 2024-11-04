@@ -254,18 +254,36 @@ class BasicApi {
   }
 
   // 지수분봉조회 api
-  static Future minutesIndexChart({
+  static Future<List<dynamic>> minutesIndexChart({
     required IndexChartDTO DTO,
   }) async {
+    List<ChartData> datas = [];
     final url = DTO.convert('$baseUrl/$quo/$basic/$indexChart');
     final response = await http.get(url, headers: {
       'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
     });
-
+    var content = jsonDecode(utf8.decode(response.bodyBytes));
+    // print('>>> $content');
     if (response.statusCode == 200) {
-      print(jsonDecode(utf8.decode(response.bodyBytes)));
-      return;
+      List<dynamic> bunbongs = content['output2'];
+      for (var bun in bunbongs) {
+        datas.add(
+          ChartData(
+            dt: stringToDateTime(
+              bun['stck_bsop_date'],
+              bun['stck_cntg_hour'],
+            ),
+            last: double.parse(bun['optn_prpr']),
+          ),
+        );
+      }
+      return [
+        content['output1']['ovrs_nmix_prpr'],
+        content['output1']['prdy_ctrt'],
+        datas
+      ];
     }
-    throw Error();
+    print('>>> 지수분봉조회 실패');
+    return ['0.0', '0.0', datas];
   }
 }
