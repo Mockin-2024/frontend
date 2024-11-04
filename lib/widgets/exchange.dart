@@ -10,7 +10,7 @@ class Exchange extends StatefulWidget {
 }
 
 class ExchangeState extends State<Exchange> {
-  final _trade = ['나스닥', '뉴욕', '홍콩', '아멕스', '상해', '심천', '호치민', '하노이', '도쿄'];
+  final _trade = ['나스닥', '뉴욕', '아멕스', '홍콩', '상해', '심천', '호치민', '하노이', '도쿄'];
 
   @override
   Widget build(BuildContext context) {
