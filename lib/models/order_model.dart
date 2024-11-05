@@ -22,8 +22,10 @@ class OrderModel {
         orderDate = json['dmst_ord_dt'],
         orderTime = json['thco_ord_tmd'],
         originOrderNum = json['orgn_odno'],
-        price = json['ft_ccld_unpr3'],
-        amount = json['ft_ccld_qty'],
+        price = double.parse(json['ft_ccld_unpr3']) == 0.0
+            ? json['ft_ord_unpr3']
+            : json['ft_ccld_unpr3'],
+        amount = json['ft_ord_qty'],
         currency = json['tr_crcy_cd'],
         signed = '체결';
 

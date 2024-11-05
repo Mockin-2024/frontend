@@ -235,12 +235,12 @@ class TradeApi {
       jd = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> li = jd['output'];
       for (var l in li) {
-        if (l['ft_ccld_qty'] == '0') {
-          // 미체결
-          orders.add(OrderModel.fromJson2(l));
-        } else {
+        if (l['nccs_qty'] == '0') {
           // 체결
           orders.add(OrderModel.fromJson1(l));
+        } else {
+          // 미체결
+          orders.add(OrderModel.fromJson2(l));
         }
       }
       next = jd['ctx_area_nk200'] ?? '';
