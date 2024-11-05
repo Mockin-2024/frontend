@@ -88,7 +88,7 @@ class BasicApi {
   }
 
   // 현재체결가 api (매도불가)
-  static Future currentPrice({
+  static Future<List<String>> currentPrice({
     required CurrentPriceDTO DTO,
   }) async {
     final url = DTO.convert('$baseUrl/$quo/$basic/$current');
@@ -97,9 +97,10 @@ class BasicApi {
     });
 
     if (response.statusCode == 200) {
-      return jsonDecode(utf8.decode(response.bodyBytes))['output']['ordy'];
+      var rst = jsonDecode(utf8.decode(response.bodyBytes))['output'];
+      return [rst['last'], rst['base'], rst['ordy']];
     }
-    return '-';
+    return ['0.0', '0.0', '-'];
   }
 
   // 기간별시세 api

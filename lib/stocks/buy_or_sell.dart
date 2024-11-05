@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/api/trade_api.dart';
+import 'package:mockin/dto/basic/current_price_dto.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/psamount_dto.dart';
 import 'package:mockin/dto/trading/stock_order_dto.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/widgets/alert.dart';
 
-class BuyOrSell extends StatelessWidget {
-  final String excd, stockName, stockSymb, stockPrice, stockRate;
+class BuyOrSell extends StatefulWidget {
+  final String excd, stockName, stockSymb;
   final bool buy;
+
+  const BuyOrSell({
+    super.key,
+    required this.excd,
+    required this.stockName,
+    required this.stockSymb,
+    required this.buy,
+  });
+
+  @override
+  State<BuyOrSell> createState() => _BuyOrSellState();
+}
+
+class _BuyOrSellState extends State<BuyOrSell> {
   final myController = TextEditingController();
   final userEnteredPrice = TextEditingController();
-
-  BuyOrSell(
-      {super.key,
-      required this.excd,
-      required this.stockName,
-      required this.stockSymb,
-      required this.stockPrice,
-      required this.stockRate,
-      required this.buy});
+  double price = 0.0, rate = 0.0;
 
   Future<String> buyPressed() async {
     return await TradeApi.buyOrder(
       DTO: StockOrderDTO(
-        excd: excd,
-        symb: stockSymb,
+        excd: widget.excd,
+        symb: widget.stockSymb,
         orderQuantity: myController.text,
         overseasOrderUnitPrice: userEnteredPrice.text,
       ),
@@ -35,8 +43,8 @@ class BuyOrSell extends StatelessWidget {
   Future<String> sellPressed(String sellM) async {
     return TradeApi.sellOrder(
       DTO: StockOrderDTO(
-        excd: excd,
-        symb: stockSymb,
+        excd: widget.excd,
+        symb: widget.stockSymb,
         orderQuantity: myController.text,
         overseasOrderUnitPrice: userEnteredPrice.text,
       ),
@@ -44,27 +52,47 @@ class BuyOrSell extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchingData();
+  }
+
+  void fetchingData() async {
+    List<String> rst = await BasicApi.currentPrice(
+      DTO: CurrentPriceDTO(
+        excd: widget.excd,
+        symb: widget.stockSymb,
+      ),
+    );
+    price = double.parse(rst[0]);
+    var pastPrice = double.parse(rst[1]);
+    rate = (price - pastPrice) / pastPrice * 100;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     var sellMoney = '';
     final Future<List<String>> stockData = TradeApi.balanceHowMuch(
       DTO: BalanceDTO(
-        overseasExchangeCode: ExchangeTrans.orderTrade[excd]!,
-        transactionCurrencyCode: ExchangeTrans.transactionCurrency[excd]!,
+        overseasExchangeCode: ExchangeTrans.orderTrade[widget.excd]!,
+        transactionCurrencyCode:
+            ExchangeTrans.transactionCurrency[widget.excd]!,
       ),
-      stockName: stockName,
+      stockName: widget.stockName,
     );
-    var sign = ExchangeTrans.signExchange[excd];
-    userEnteredPrice.text = stockPrice;
+    var sign = ExchangeTrans.signExchange[widget.excd];
+    userEnteredPrice.text = price.toStringAsFixed(3);
     return Scaffold(
       body: Column(
         children: [
           const SizedBox(
-            height: 50,
+            height: 65,
           ),
           Column(
             children: [
               Text(
-                stockName,
+                widget.stockName,
                 style: const TextStyle(
                   color: Colors.black,
                 ),
@@ -73,9 +101,11 @@ class BuyOrSell extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    '$stockPrice$sign  $stockRate%',
+                    rate < 0
+                        ? '${price.toStringAsFixed(3)}$sign  ${rate.toStringAsFixed(2)}%'
+                        : '$price$sign  +${rate.toStringAsFixed(2)}%',
                     style: TextStyle(
-                      color: stockRate[0] == '-' ? Colors.blue : Colors.red,
+                      color: rate < 0 ? Colors.blue : Colors.red,
                     ),
                   ),
                 ],
@@ -100,13 +130,13 @@ class BuyOrSell extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        buy ? '구매할 가격' : '판매할 가격',
+                        widget.buy ? '구매할 가격' : '판매할 가격',
                         style: const TextStyle(color: Colors.black),
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      buy
+                      widget.buy
                           ? TextField(
                               decoration: InputDecoration(
                                 border: const OutlineInputBorder(),
@@ -183,7 +213,7 @@ class BuyOrSell extends StatelessWidget {
                       TextField(
                         decoration: InputDecoration(
                           border: const OutlineInputBorder(),
-                          labelText: buy ? '몇 주 구매할까요?' : '몇 주 판매할까요?',
+                          labelText: widget.buy ? '몇 주 구매할까요?' : '몇 주 판매할까요?',
                         ),
                         keyboardType: TextInputType.number,
                         controller: myController,
@@ -191,13 +221,13 @@ class BuyOrSell extends StatelessWidget {
                       const SizedBox(
                         height: 5,
                       ),
-                      buy
+                      widget.buy
                           ? FutureBuilder(
                               future: TradeApi.psAmount(
                                 DTO: PsamountDTO(
-                                  excd: ExchangeTrans.orderTrade[excd]!,
-                                  symb: stockSymb,
-                                  unitPrice: stockPrice,
+                                  excd: ExchangeTrans.orderTrade[widget.excd]!,
+                                  symb: widget.stockSymb,
+                                  unitPrice: price.toStringAsFixed(3),
                                 ),
                               ),
                               builder: (context, snapshot) {
@@ -248,7 +278,7 @@ class BuyOrSell extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                   ),
-                  onPressed: buy
+                  onPressed: widget.buy
                       ? () async {
                           String st = await buyPressed();
                           if (!context.mounted) return;
@@ -262,7 +292,7 @@ class BuyOrSell extends StatelessWidget {
                           Alert.showAlert(context, st, '');
                         },
                   child: Text(
-                    buy ? '구매' : '판매',
+                    widget.buy ? '구매' : '판매',
                     style: const TextStyle(
                       color: Colors.white,
                     ),
