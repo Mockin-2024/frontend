@@ -352,7 +352,6 @@ class OrderDetailed extends StatelessWidget {
                               excd: ExchangeTrans.orderTradeReverse[excd]!,
                               stockName: name,
                               stockSymb: symb,
-                              stockPrice: price,
                             ),
                           ),
                         );

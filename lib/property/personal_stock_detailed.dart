@@ -130,7 +130,6 @@ class PersonalStockDetailed extends StatelessWidget {
                         excd: ExchangeTrans.trade[excd]!,
                         stockName: name,
                         stockSymb: symb,
-                        stockPrice: curPrice,
                       ),
                     ),
                   );

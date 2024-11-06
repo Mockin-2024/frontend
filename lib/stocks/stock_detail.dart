@@ -2,24 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/basic/current_price_dto.dart';
-import 'package:mockin/dto/basic/stock_chart_dto.dart';
 import 'package:mockin/dto/basic/term_dto.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
-import 'package:mockin/models/chart_data.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/stocks/buy_or_sell.dart';
-import 'package:fl_chart/fl_chart.dart';
-// import 'package:mockin/widgets/news.dart';
+import 'package:mockin/stocks/detailed/chart_tab.dart';
+import 'package:mockin/stocks/detailed/hoga_tab.dart';
+import 'package:mockin/stocks/detailed/more_info_tab.dart';
+import 'package:mockin/stocks/detailed/my_stock_tab.dart';
+import 'package:mockin/widgets/main_chart.dart';
 
 class StockDetail extends StatefulWidget {
-  final String excd, stockName, stockSymb, stockPrice;
+  final String excd, stockName, stockSymb;
 
   const StockDetail({
     super.key,
     required this.excd,
     required this.stockName,
     required this.stockSymb,
-    required this.stockPrice,
   });
 
   @override
@@ -27,9 +27,9 @@ class StockDetail extends StatefulWidget {
 }
 
 class _StockDetailState extends State<StockDetail> {
-  List<bool> isSelected = [true, false, false, false, false, false];
-  final List<String> dayGap = ['1일', '1주', '1달', '3달', '1년', '5년'];
-  double rate = 0.0;
+  double price = 0.0, pastPrice = 0.0, diff = 0.0, rate = 0.0;
+  String canBuy = '-', seletedGap = '1일';
+  bool stockHave = false;
 
   final Map<String, List<dynamic>> gapGUBN = {
     '1일': ['0', 1],
@@ -40,32 +40,71 @@ class _StockDetailState extends State<StockDetail> {
     '5년': ['2', 60],
   }; // 일,주,달 구분과 index
 
-  final Map<String, List<dynamic>> bunbong = {
-    '1일': ['5', 1],
-    '1주': ['10', 2],
-    '1달': ['1440', 1],
-    '3달': ['1440', 3],
-    '1년': ['1440', 12],
-    '5년': ['1440', 60],
-  }; // 일자에 따른 분봉 갭, 반복 횟수
+  @override
+  void initState() {
+    super.initState();
+    fetchingData();
+  }
+
+  void fetchingData() async {
+    List<String> rst = await BasicApi.currentPrice(
+      DTO: CurrentPriceDTO(
+        excd: widget.excd,
+        symb: widget.stockSymb,
+      ),
+    );
+    price = double.parse(rst[0]);
+    pastPrice = double.parse(rst[1]);
+    diff = price - pastPrice;
+    rate = diff / pastPrice * 100;
+    canBuy = rst[2];
+
+    stockHave = await TradeApi.balanceDoIHave(
+      DTO: BalanceDTO(
+        overseasExchangeCode: ExchangeTrans.orderTrade[widget.excd]!,
+        transactionCurrencyCode:
+            ExchangeTrans.transactionCurrency[widget.excd]!,
+      ),
+      stockName: widget.stockName,
+    );
+    setState(() {});
+  }
+
+  void _onDateSeleted(String date) async {
+    // gap인 날만큼의 종가를 들고와서 현재
+    // price와 계산 후 diff, rate를 계산
+    seletedGap = date;
+    pastPrice = double.parse(
+      await BasicApi.termPrice(
+        DTO: TermDTO(
+          EXCD: widget.excd,
+          SYMB: widget.stockSymb,
+          GUBN: gapGUBN[seletedGap]![0],
+        ),
+        idx: gapGUBN[seletedGap]![1],
+      ),
+    );
+    diff = price - pastPrice;
+    rate = diff / pastPrice * 100;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    var seletedGap = dayGap[isSelected.indexOf(true)];
-
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(30, 5, 0, 10),
-              child: Column(
+    var sign = ExchangeTrans.signExchange[widget.excd];
+    return DefaultTabController(
+      length: 4,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(110.0),
+            child: Column(children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      height: 60,
-                    ),
                     Text(
                       '${widget.stockName} (${widget.stockSymb})',
                       style: const TextStyle(
@@ -75,268 +114,94 @@ class _StockDetailState extends State<StockDetail> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Text(
+                      '$price${ExchangeTrans.signExchange[widget.excd]}',
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Row(
+                          children: [
+                            Text(
+                              '$seletedGap 전 보다 ',
+                              style: const TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            Text(
+                              diff > 0
+                                  ? '+${diff.toStringAsFixed(2)}$sign (${rate.toStringAsFixed(2)}%)'
+                                  : '${diff.toStringAsFixed(2)}$sign (${rate.toStringAsFixed(2)}%)',
+                              style: TextStyle(
+                                color: diff > 0 ? Colors.red : Colors.blue,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
                         Text(
-                          '${widget.stockPrice}${ExchangeTrans.signExchange[widget.excd]}',
+                          canBuy,
                           style: const TextStyle(
                             color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.w600,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        FutureBuilder(
-                          future: BasicApi.termPrice(
-                            DTO: TermDTO(
-                              EXCD: widget.excd,
-                              SYMB: widget.stockSymb,
-                              GUBN: gapGUBN[seletedGap]![0],
-                            ),
-                            idx: gapGUBN[seletedGap]![1],
-                          ),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              // gap인 날만큼의 종가를 들고와서 현재
-                              // price와 계산 후 diff, rate를 계산
-                              var pastPrice = snapshot.data;
-                              var diff = double.parse(widget.stockPrice) -
-                                  double.parse(pastPrice);
-                              rate = diff / double.parse(pastPrice) * 100;
-                              var sign =
-                                  ExchangeTrans.signExchange[widget.excd];
-                              return Row(
-                                children: [
-                                  Text(
-                                    '$seletedGap 전 보다 ',
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  Text(
-                                    diff > 0
-                                        ? '+${diff.toStringAsFixed(2)}$sign (${rate.toStringAsFixed(2)}%)'
-                                        : '${diff.toStringAsFixed(2)}$sign (${rate.toStringAsFixed(2)}%)',
-                                    style: TextStyle(
-                                      color:
-                                          diff > 0 ? Colors.red : Colors.blue,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              );
-                            } else {
-                              return const Text(' ');
-                            }
-                          },
                         ),
                       ],
                     ),
-                  ]),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 20,
-                vertical: 20,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        '차트',
-                        style: TextStyle(
-                          color: Colors.black,
-                        ),
-                      ),
-                      FutureBuilder(
-                          future: BasicApi.currentPrice(
-                            DTO: CurrentPriceDTO(
-                              excd: widget.excd,
-                              symb: widget.stockSymb,
-                            ),
-                          ),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Text(
-                                '현재 상태 / ${snapshot.data}',
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                              );
-                            } else {
-                              return const Text('');
-                            }
-                          }),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                ),
-                width: MediaQuery.of(context).size.width * 0.9,
-                height: MediaQuery.of(context).size.height * 0.4,
-                child: FutureBuilder(
-                  future: BasicApi.minutesChart(
-                    DTO: StockChartDTO(
-                      EXCD: widget.excd,
-                      SYMB: widget.stockSymb,
-                      NMIN: bunbong[seletedGap]![0],
-                      PINC: '1',
-                      NREC: '120',
-                    ),
-                    period: bunbong[seletedGap]![1],
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      List<ChartData> dt = snapshot.data;
-                      // print(dt.length);
-                      // for (var d in dt) {
-                      //   print('>>> ${d.dt} ${d.last}');
-                      // }
-                      return LineChart(
-                        LineChartData(
-                          gridData: const FlGridData(show: false),
-                          titlesData: FlTitlesData(
-                            bottomTitles: AxisTitles(
-                              sideTitles: SideTitles(
-                                showTitles: true,
-                                getTitlesWidget: (value, meta) {
-                                  int index = value.toInt();
-                                  if (index >= 0 && index < dt.length) {
-                                    final time = dt[index].dt;
-                                    return Text('${time.hour}:${time.minute}');
-                                  }
-                                  return const Text('');
-                                },
-                              ),
-                            ),
-                            leftTitles: const AxisTitles(
-                              sideTitles: SideTitles(showTitles: true),
-                            ),
-                          ),
-                          lineBarsData: [
-                            LineChartBarData(
-                              spots: List.generate(dt.length, (idx) {
-                                return FlSpot(idx.toDouble(), dt[idx].last);
-                              }),
-                              isCurved: true,
-                              color: Colors.red,
-                              dotData: const FlDotData(show: false),
-                              belowBarData: BarAreaData(show: false),
-                            ),
-                          ],
-                          borderData: FlBorderData(show: false),
-                          lineTouchData: LineTouchData(
-                            touchTooltipData: LineTouchTooltipData(
-                              getTooltipColor: (touchedSpot) => Colors.black,
-                              getTooltipItems:
-                                  (List<LineBarSpot> touchedSpots) {
-                                return touchedSpots.map((touchedSpot) {
-                                  final dateTime = dt[touchedSpot.x.toInt()].dt;
-                                  final price = touchedSpot.y;
-
-                                  return LineTooltipItem(
-                                    '${dateTime.year}.${dateTime.month}.${dateTime.day} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}\n$price${ExchangeTrans.signExchange[widget.excd]}',
-                                    const TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  );
-                                }).toList();
-                              },
-                            ),
-                          ),
-                        ),
-                      );
-                    }
-                    return const Text('-');
-                  },
+                    TabBar(
+                        labelColor: Colors.black,
+                        dividerColor: Colors.white,
+                        indicatorColor: Colors.white,
+                        unselectedLabelColor: Colors.black.withOpacity(0.5),
+                        tabs: const [
+                          Tab(text: '차트'),
+                          Tab(text: '호가'),
+                          Tab(text: '내 주식'),
+                          Tab(text: '종목정보'),
+                        ]),
+                  ],
                 ),
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ToggleButtons(
-                  isSelected: isSelected,
-                  renderBorder: false,
-                  color: Colors.black.withOpacity(0.4),
-                  selectedColor: Colors.black,
-                  fillColor: Colors.white,
-                  onPressed: (int idx) {
-                    setState(() {
-                      for (int i = 0; i < isSelected.length; i++) {
-                        isSelected[i] = i == idx;
-                      }
-                    });
-                  },
-                  children: dayGap.map((gap) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 12,
-                      ),
-                      child: Text(gap),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FutureBuilder(
-                  future: TradeApi.balanceDoIHave(
-                    DTO: BalanceDTO(
-                      overseasExchangeCode:
-                          ExchangeTrans.orderTrade[widget.excd]!,
-                      transactionCurrencyCode:
-                          ExchangeTrans.transactionCurrency[widget.excd]!,
-                    ),
-                    stockName: widget.stockName,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      if (snapshot.data == true) {
-                        return BuySellButton(
-                          widget: widget,
-                          buySell: '판매',
-                          rate: rate.toStringAsFixed(2),
-                          bs: false,
-                          have: true,
-                        );
-                      }
-                    }
-                    return BuySellButton(
+            ]),
+          ),
+        ),
+        body: TabBarView(children: [
+          ChartTab(widget: widget, onDateSelected: _onDateSeleted),
+          const HogaTab(),
+          const MyStockTab(),
+          const MoreInfoTab(),
+        ]),
+        bottomNavigationBar: Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              stockHave
+                  ? BuySellButton(
                       widget: widget,
                       buySell: '판매',
-                      rate: rate.toStringAsFixed(2),
+                      bs: false,
+                      have: true,
+                    )
+                  : BuySellButton(
+                      widget: widget,
+                      buySell: '판매',
                       bs: false,
                       have: false,
-                    );
-                  },
-                ),
-                BuySellButton(
-                  widget: widget,
-                  buySell: '구매',
-                  rate: rate.toStringAsFixed(2),
-                  bs: true,
-                  have: true,
-                ),
-              ],
-            ),
-          ],
+                    ),
+              BuySellButton(
+                widget: widget,
+                buySell: '구매',
+                bs: true,
+                have: true,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -348,13 +213,12 @@ class BuySellButton extends StatelessWidget {
     super.key,
     required this.widget,
     required this.buySell,
-    required this.rate,
     required this.bs,
     required this.have,
   });
 
   final StockDetail widget;
-  final String buySell, rate;
+  final String buySell;
   final bool bs, have;
 
   @override
@@ -369,8 +233,6 @@ class BuySellButton extends StatelessWidget {
                     excd: widget.excd,
                     stockName: widget.stockName,
                     stockSymb: widget.stockSymb,
-                    stockPrice: widget.stockPrice,
-                    stockRate: rate,
                     buy: bs,
                   ),
                 ),
