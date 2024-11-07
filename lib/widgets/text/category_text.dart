@@ -10,7 +10,7 @@ class CategoryText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Text(
-      '- $tt',
+      tt,
       style: const TextStyle(
         color: Colors.black,
         fontSize: 20,
