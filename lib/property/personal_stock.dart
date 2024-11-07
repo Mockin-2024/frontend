@@ -7,7 +7,7 @@ import 'package:mockin/property/personal_stock_detailed.dart';
 import 'package:mockin/provider/exchange_provider.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/widgets/exchange.dart';
-import 'package:mockin/widgets/one_line.dart';
+import 'package:mockin/widgets/text/one_line.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';

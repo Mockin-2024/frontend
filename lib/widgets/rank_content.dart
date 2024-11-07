@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/stocks/stock_opt_all.dart';
-import 'package:mockin/widgets/one_line.dart';
+import 'package:mockin/widgets/text/one_line.dart';
 import 'package:mockin/widgets/base_rank.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';

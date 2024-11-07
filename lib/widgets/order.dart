@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/widgets/one_line.dart';
+import 'package:mockin/widgets/text/one_line.dart';
 
 class Order extends StatelessWidget {
   final String stockName, buySell, date, time, amount, price;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/widgets/one_line.dart';
+import 'package:mockin/widgets/text/one_line.dart';
 
 class News extends StatelessWidget {
   final String newsTitle, newsDay, newsTime, country, stockName;
