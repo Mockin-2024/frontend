@@ -172,7 +172,7 @@ class _StockDetailState extends State<StockDetail> {
         body: TabBarView(children: [
           ChartTab(widget: widget, onDateSelected: _onDateSeleted),
           const HogaTab(),
-          const MyStockTab(),
+          MyStockTab(symb: widget.stockSymb),
           MoreInfoTab(curPrice: price, widget: widget),
         ]),
         bottomNavigationBar: Container(

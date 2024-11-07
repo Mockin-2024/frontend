@@ -264,11 +264,77 @@ class TradeApi {
           List<dynamic> li = jd['output'];
           for (var l in li) {
             if (l['nccs_qty'] == '0') {
-              // 미체결
+              // 체결
               orders.add(OrderModel.fromJson1(l));
             } else {
-              // 체결
+              // 미체결
               orders.add(OrderModel.fromJson2(l));
+            }
+          }
+        }
+        next = jd['ctx_area_nk200'] ?? '';
+        condition = jd['ctx_area_fk200'] ?? '';
+      }
+      return orders;
+    }
+    print('>>> failed');
+    return orders;
+  }
+
+  // 주문체결 내역 api
+  static Future<List<OrderModel>> ccnlMyStock({
+    required CcnlDTO DTO,
+    required String symb,
+  }) async {
+    dynamic jd = '';
+    String next, condition = '';
+    List<OrderModel> orders = [];
+    Uri url = DTO.convert('$baseUrl/$trading/$jmcn');
+    var response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
+    if (response.statusCode == 200) {
+      jd = jsonDecode(utf8.decode(response.bodyBytes));
+      List<dynamic> li = jd['output'];
+      for (var l in li) {
+        if (l['pdno'] == symb) {
+          if (l['nccs_qty'] == '0') {
+            // 체결
+            orders.add(OrderModel.fromJson1(l));
+          } else {
+            // 미체결
+            orders.add(OrderModel.fromJson2(l));
+          }
+        }
+      }
+      next = jd['ctx_area_nk200'] ?? '';
+      condition = jd['ctx_area_fk200'] ?? '';
+      while (
+          next.replaceAll(' ', '').isNotEmpty && response.statusCode == 200) {
+        url = CcnlDTO(
+          orderStartDate: DTO.orderStartDate,
+          orderEndDate: DTO.orderEndDate,
+          continuousSearchCondition200: condition.replaceAll(' ', ''),
+          continuousSearchKey200: next.replaceAll(' ', ''),
+          transactionContinuation: 'N',
+        ).convert('$baseUrl/$trading/$jmcn');
+        response = await http.get(url, headers: {
+          'Authorization':
+              'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+        });
+        if (response.statusCode == 200) {
+          jd = jsonDecode(utf8.decode(response.bodyBytes));
+
+          List<dynamic> li = jd['output'];
+          for (var l in li) {
+            if (l['pdno'] == symb) {
+              if (l['nccs_qty'] == '0') {
+                // 체결
+                orders.add(OrderModel.fromJson1(l));
+              } else {
+                // 미체결
+                orders.add(OrderModel.fromJson2(l));
+              }
             }
           }
         }
