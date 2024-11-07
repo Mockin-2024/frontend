@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/current_detailed_dto.dart';
 import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/stocks/stock_detail.dart';
 import 'package:mockin/widgets/stock_detailed/more_info/info_box.dart';
 import 'package:mockin/widgets/stock_detailed/more_info/line_bar.dart';
 import 'package:mockin/widgets/text/content_text.dart';
@@ -12,21 +11,22 @@ class MoreInfoTab extends StatelessWidget {
   const MoreInfoTab({
     super.key,
     required this.curPrice,
-    required this.widget,
+    required this.excd,
+    required this.symb,
   });
 
   final double curPrice;
-  final StockDetail widget;
+  final String excd, symb;
 
   @override
   Widget build(BuildContext context) {
-    var sign = ExchangeTrans.signExchange[widget.excd];
+    var sign = ExchangeTrans.signExchange[excd];
     return SingleChildScrollView(
       child: FutureBuilder(
           future: BasicApi.currentDetailed(
             DTO: CurrentDetailedDTO(
-              EXCD: widget.excd,
-              SYMB: widget.stockSymb,
+              EXCD: excd,
+              SYMB: symb,
             ),
           ),
           builder: (context, snapshot) {

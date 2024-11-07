@@ -173,7 +173,8 @@ class _StockDetailState extends State<StockDetail> {
           ChartTab(widget: widget, onDateSelected: _onDateSeleted),
           const HogaTab(),
           MyStockTab(symb: widget.stockSymb),
-          MoreInfoTab(curPrice: price, widget: widget),
+          MoreInfoTab(
+              curPrice: price, excd: widget.excd, symb: widget.stockSymb),
         ]),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
