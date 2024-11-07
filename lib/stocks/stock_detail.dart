@@ -5,12 +5,11 @@ import 'package:mockin/dto/basic/current_price_dto.dart';
 import 'package:mockin/dto/basic/term_dto.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/stocks/buy_or_sell.dart';
 import 'package:mockin/stocks/detailed/chart_tab.dart';
 import 'package:mockin/stocks/detailed/hoga_tab.dart';
 import 'package:mockin/stocks/detailed/more_info_tab.dart';
 import 'package:mockin/stocks/detailed/my_stock_tab.dart';
-import 'package:mockin/widgets/main_chart.dart';
+import 'package:mockin/widgets/buy_sell_button.dart';
 
 class StockDetail extends StatefulWidget {
   final String excd, stockName, stockSymb;
@@ -174,7 +173,7 @@ class _StockDetailState extends State<StockDetail> {
           ChartTab(widget: widget, onDateSelected: _onDateSeleted),
           const HogaTab(),
           const MyStockTab(),
-          const MoreInfoTab(),
+          MoreInfoTab(curPrice: price, widget: widget),
         ]),
         bottomNavigationBar: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -202,47 +201,6 @@ class _StockDetailState extends State<StockDetail> {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class BuySellButton extends StatelessWidget {
-  const BuySellButton({
-    super.key,
-    required this.widget,
-    required this.buySell,
-    required this.bs,
-    required this.have,
-  });
-
-  final StockDetail widget;
-  final String buySell;
-  final bool bs, have;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: have
-          ? () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BuyOrSell(
-                    excd: widget.excd,
-                    stockName: widget.stockName,
-                    stockSymb: widget.stockSymb,
-                    buy: bs,
-                  ),
-                ),
-              );
-            }
-          : null,
-      child: Text(
-        buySell,
-        style: TextStyle(
-          color: have ? Colors.black : Colors.black.withOpacity(0.5),
         ),
       ),
     );

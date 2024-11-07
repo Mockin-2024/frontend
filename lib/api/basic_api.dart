@@ -158,7 +158,7 @@ class BasicApi {
   }
 
   // 현재가상세 api
-  static Future currentDetailed({
+  static Future<List<String>> currentDetailed({
     required CurrentDetailedDTO DTO,
   }) async {
     final url = DTO.convert('$baseUrl/$quo/$basic/$cpd');
@@ -167,10 +167,40 @@ class BasicApi {
     });
 
     if (response.statusCode == 200) {
-      print(jsonDecode(utf8.decode(response.bodyBytes)));
-      return;
+      var jd = jsonDecode(utf8.decode(response.bodyBytes))['output'];
+      print('>>> 현재가상세 $jd');
+      return [
+        jd['high'], // 고가
+        jd['low'], // 저가
+        jd['h52p'], // 52주 최고가
+        jd['l52p'], // 52주 최저가
+        jd['perx'], // PER
+        jd['pbrx'], // PBR
+        jd['epsx'], // EPS
+        jd['bpsx'], // BPS
+        jd['shar'], // 상장주수
+        jd['tomv'], // 시가총액
+        jd['tvol'], // 거래량
+        jd['tamt'], // 거래대금
+        jd['t_rate'], // 당일환율
+      ];
     }
-    throw Error();
+    print('>>> 현재가상세 실패');
+    return [
+      '0.0', // 고가
+      '0.0', // 저가
+      '0.0', // 52주 최고가
+      '0.0', // 52주 최저가
+      '0.0', // PER
+      '0.0', // PBR
+      '0.0', // EPS
+      '0.0', // BPS
+      '0.0', // 상장주수
+      '0.0', // 시가총액
+      '0.0', // 거래량
+      '0.0', // 거래대금
+      '0.0', // 당일환율
+    ];
   }
 
   // 주식분봉조회 api
