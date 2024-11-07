@@ -51,7 +51,7 @@ class _StockState extends State<Stock> {
     '홍콩 환율',
     '베트남 환율',
   ];
-  List<dynamic> indexChartDatas = [];
+  late Future<List<dynamic>> indexChartDatas;
 
   Map<String, int> trans = {
     '거래대금': 1,
@@ -64,26 +64,23 @@ class _StockState extends State<Stock> {
   @override
   void initState() {
     super.initState();
-    fetchIndexData();
+    indexChartDatas = getIndexData();
   }
 
-  Future<void> fetchIndexData() async {
+  Future<List<dynamic>> getIndexData() async {
+    List<List<dynamic>> tmp = [];
     for (var i = 0; i < _indexs.length; i++) {
-      var indexData = await getIndexData(i);
-      indexChartDatas.add([_names[i], indexData]);
+      var indexData = await BasicApi.minutesIndexChart(
+        DTO: IndexChartDTO(
+          fidCondMrktDivCode: _indexs[i][0],
+          fidInputIscd: _indexs[i][1],
+          fidHourClsCode: _indexs[i][2],
+          fidPwDataIncuYn: _indexs[i][3],
+        ),
+      );
+      tmp.add([_names[i], indexData]);
     }
-    setState(() {});
-  }
-
-  Future<List<dynamic>> getIndexData(int idx) async {
-    return await BasicApi.minutesIndexChart(
-      DTO: IndexChartDTO(
-        fidCondMrktDivCode: _indexs[idx][0],
-        fidInputIscd: _indexs[idx][1],
-        fidHourClsCode: _indexs[idx][2],
-        fidPwDataIncuYn: _indexs[idx][3],
-      ),
-    );
+    return tmp;
   }
 
   @override
@@ -111,23 +108,31 @@ class _StockState extends State<Stock> {
               ),
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.16,
-              child: ListView.builder(
-                  padding: EdgeInsets.zero,
-                  itemCount: indexChartDatas.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (context, index) {
-                    return IndexChartWidget(
-                      name: indexChartDatas[index][0],
-                      price: double.parse(indexChartDatas[index][1][0])
-                          .toStringAsFixed(2),
-                      rate: indexChartDatas[index][1][1][0] == '-'
-                          ? '${indexChartDatas[index][1][1]}%'
-                          : '+${indexChartDatas[index][1][1]}%',
-                      chartData: indexChartDatas[index][1][2],
-                    );
-                  }),
-            ),
+                height: MediaQuery.of(context).size.height * 0.16,
+                child: FutureBuilder(
+                  future: indexChartDatas,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var chartDatas = snapshot.data!;
+                      return ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: chartDatas.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return IndexChartWidget(
+                              name: chartDatas[index][0],
+                              price: double.parse(chartDatas[index][1][0])
+                                  .toStringAsFixed(2),
+                              rate: chartDatas[index][1][1][0] == '-'
+                                  ? '${chartDatas[index][1][1]}%'
+                                  : '+${chartDatas[index][1][1]}%',
+                              chartData: chartDatas[index][1][2],
+                            );
+                          });
+                    }
+                    return const Text('');
+                  },
+                )),
             Column(children: [
               const Exchange(),
               Padding(
