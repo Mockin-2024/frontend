@@ -353,3 +353,7 @@ build/
 **/.dart_tool
 
 %userprofile%/
+
+.env
+*.jks
+*.base64
