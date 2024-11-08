@@ -353,3 +353,5 @@ build/
 **/.dart_tool
 
 %userprofile%/
+.flutter-plugins
+.flutter-plugins-dependencies
