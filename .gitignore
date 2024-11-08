@@ -353,5 +353,12 @@ build/
 **/.dart_tool
 
 %userprofile%/
+
+
+.env
+*.jks
+*.base64
+
 .flutter-plugins
 .flutter-plugins-dependencies
+
