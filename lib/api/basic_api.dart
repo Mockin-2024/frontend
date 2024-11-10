@@ -9,11 +9,13 @@ import 'package:mockin/dto/basic/index_chart_dto.dart';
 
 import 'package:mockin/dto/basic/payment_day_dto.dart';
 import 'package:mockin/dto/basic/stock_chart_dto.dart';
+import 'package:mockin/dto/basic/ten_hoga_dto.dart';
 import 'package:mockin/dto/basic/term_dto.dart';
 import 'package:mockin/dto/basic/year_dto.dart';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:mockin/models/basic_stock_model.dart';
+import 'package:mockin/models/hoga_data_model.dart';
 import 'package:mockin/models/chart_data.dart';
 
 import 'package:mockin/storage/jwt_token.dart';
@@ -31,6 +33,7 @@ class BasicApi {
   static const String cpd = 'price-detail';
   static const String chart = 'inquire-time-itemchartprice';
   static const String indexChart = 'inquire-time-indexchartprice';
+  static const String cur10hoga = 'inquire-asking-price';
 
   // 조건검색 api
   static Future<List<BasicStockModel>> conditionSearch({
@@ -316,5 +319,22 @@ class BasicApi {
     }
     print('>>> 지수분봉조회 실패');
     return ['0.0', '0.0', datas];
+  }
+
+  static Future<HogaDataModel> tenHoga({
+    required TenHogaDTO DTO,
+  }) async {
+    HogaDataModel data = HogaDataModel();
+    final url = DTO.convert('$baseUrl/$quo/$basic/$cur10hoga');
+    final response = await http.get(url, headers: {
+      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+    });
+    if (response.statusCode == 200) {
+      var content = jsonDecode(utf8.decode(response.bodyBytes));
+      data = HogaDataModel.fromJson(content);
+      print('>>> $content');
+      return data;
+    }
+    return data;
   }
 }
