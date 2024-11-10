@@ -85,7 +85,6 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<String> checkEmail() async {
-    print('>>> ${certified.text}');
     if (certified.text.isNotEmpty) {
       var rst = await LoginApi.emailCheck(
         DTO: EmailAuthDTO(
@@ -101,17 +100,15 @@ class _SignUpState extends State<SignUp> {
   }
 
   Future<String> signup() async {
-    if (nickName.text.isNotEmpty) {
-      var rst = await LoginApi.userSignUp(
-        DTO: SignupDTO(
-          email: email.text,
-          pw: password.text,
-          name: nickName.text,
-        ),
-      );
-      if (rst != '-') {
-        return rst;
-      }
+    var rst = await LoginApi.userSignUp(
+      DTO: SignupDTO(
+        email: email.text,
+        pw: password.text,
+        name: nickName.text,
+      ),
+    );
+    if (rst != '-') {
+      return rst;
     }
     return '';
   }
@@ -133,7 +130,7 @@ class _SignUpState extends State<SignUp> {
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 52,
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ],
@@ -144,82 +141,27 @@ class _SignUpState extends State<SignUp> {
             TextInput(
               name: 'email',
               tec: email,
-              isChecking: userSignupGoing,
-            ),
-            TextInput(
-              name: 'nickname',
-              tec: nickName,
-              isChecking: userSignupGoing,
-            ),
-            PasswordInput(
-              name: 'password',
-              tec: password,
-              isChecking: userSignupGoing,
-            ),
-            PasswordInput(
-              name: 'check password',
-              tec: checkPassword,
-              isChecking: userSignupGoing,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Center(
-              child: ElevatedButton(
-                onPressed: userSignupGoing
-                    ? () async {
-                        if (validateEmail()) {
-                          if (isEqualPassword()) {
-                            var rst = await signup();
-                            if (rst != '') {
-                              if (!context.mounted) return;
-                              userSignupGoing = false;
-                              setState(() {});
-                              Alert.showAlert(context, rst, '');
-                            } else {
-                              if (!context.mounted) return;
-                              Alert.showAlert(context, '회원가입', '실패');
-                            }
-                          } else {
-                            if (!context.mounted) return;
-                            Alert.showAlert(context, '비밀번호가', '일치하지 않습니다.');
-                          }
-                        } else {
-                          if (!context.mounted) return;
-                          Alert.showAlert(context, '이메일 형식이', '유효하지 않습니다.');
-                        }
-                      }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: emailNotCertified
-                      ? Colors.black
-                      : Colors.black.withOpacity(0.5),
-                ),
-                child: const Text(
-                  '회원 가입',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
+              isChecking: !isRunning && emailNotCertified,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                  onPressed: !userSignupGoing && !isRunning
+                  onPressed: !isRunning && emailNotCertified
                       ? () async {
-                          var rst = await sendToEmail();
-                          if (rst != '') {
+                          if (validateEmail()) {
+                            var rst = await sendToEmail();
+                            if (rst != '') {
+                              if (!context.mounted) return;
+                              Alert.showAlert(context, rst, '');
+                              return;
+                            }
                             if (!context.mounted) return;
-                            Alert.showAlert(context, rst, '');
-                            return;
+                            Alert.showAlert(context, '이메일 발송', '실패하였습니다.');
+                          } else {
+                            if (!context.mounted) return;
+                            Alert.showAlert(context, '이메일 형식이', '아닙니다.');
                           }
-                          if (!context.mounted) return;
-                          Alert.showAlert(context, '이메일 발송', '실패');
                         }
                       : null,
                   style: ElevatedButton.styleFrom(
@@ -253,16 +195,16 @@ class _SignUpState extends State<SignUp> {
                               onPressed: () async {
                                 var rst = await checkEmail();
                                 if (rst != '') {
+                                  emailNotCertified = false;
                                   isRunning = false;
                                   timer.cancel();
                                   if (!context.mounted) return;
-                                  Navigator.pop(context);
                                   Alert.showAlert(context, rst, '');
                                   setState(() {});
                                   return;
                                 }
                                 if (!context.mounted) return;
-                                Alert.showAlert(context, '이메일 인증', '실패');
+                                Alert.showAlert(context, '이메일 인증', '실패하였습니다.');
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
@@ -280,6 +222,70 @@ class _SignUpState extends State<SignUp> {
                     ],
                   )
                 : Container(),
+            if (!emailNotCertified)
+              Column(
+                children: [
+                  TextInput(
+                    name: 'nickname',
+                    tec: nickName,
+                    isChecking: userSignupGoing,
+                  ),
+                  PasswordInput(
+                    name: 'password',
+                    tec: password,
+                    isChecking: userSignupGoing,
+                  ),
+                  PasswordInput(
+                    name: 'check password',
+                    tec: checkPassword,
+                    isChecking: userSignupGoing,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: userSignupGoing
+                          ? () async {
+                              if (nickName.text.isNotEmpty) {
+                                if (isEqualPassword()) {
+                                  var rst = await signup();
+                                  if (rst != '') {
+                                    if (!context.mounted) return;
+                                    Navigator.pop(context);
+                                    Alert.showAlert(context, rst, '');
+                                  } else {
+                                    if (!context.mounted) return;
+                                    Alert.showAlert(
+                                        context, '회원가입', '실패하였습니다.');
+                                  }
+                                } else {
+                                  if (!context.mounted) return;
+                                  Alert.showAlert(
+                                      context, '비밀번호를', '제대로 입력해주세요.');
+                                }
+                              } else {
+                                if (!context.mounted) return;
+                                Alert.showAlert(context, '닉네임을', '입력해주세요.');
+                              }
+                            }
+                          : null,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: const Text(
+                        '회원 가입',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                ],
+              ),
           ],
         ),
       ),
