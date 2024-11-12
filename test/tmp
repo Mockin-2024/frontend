@@ -1,0 +1,110 @@
+// Container(
+            //   child: Column(children: [
+            //     const SizedBox(
+            //       height: 10,
+            //     ),
+            //     Padding(
+            //       padding: const EdgeInsets.only(
+            //         left: 40,
+            //       ),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         children: [
+            //           Text(
+            //             '최신 금융 뉴스',
+            //             style: TextStyle(
+            //               color: Theme.of(context).textTheme.bodySmall!.color,
+            //               fontSize: 18,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     const SizedBox(
+            //       height: 5,
+            //     ),
+            //     Padding(
+            //       padding: const EdgeInsets.symmetric(
+            //         horizontal: 30,
+            //       ),
+            //       child: Container(
+            //         decoration: BoxDecoration(
+            //           color: const Color.fromARGB(255, 128, 128, 128),
+            //           borderRadius: BorderRadius.circular(15),
+            //         ),
+            //         child: const Column(
+            //           // 차후 ListView로 바꿀 예정
+            //           children: [
+            //             News(
+            //               newsTitle: "넷플릭스, 광고 전망 낙관 제프리스",
+            //               stockName: '넷플릭스',
+            //               stockPrice: '160.9500',
+            //               stockRate: '-4.09',
+            //             ),
+            //             News(
+            //               newsTitle: '패스틀리, 단기 악재 직면 - BofA',
+            //               stockName: '패스틀리',
+            //               stockPrice: '160.7500',
+            //               stockRate: '-0.64',
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ]),
+            // ),
+            // Container(
+            //   child: Column(children: [
+            //     const SizedBox(
+            //       height: 10,
+            //     ),
+            //     Padding(
+            //       padding: const EdgeInsets.only(
+            //         left: 40,
+            //       ),
+            //       child: Row(
+            //         mainAxisAlignment: MainAxisAlignment.start,
+            //         children: [
+            //           Text(
+            //             '재무 정보',
+            //             style: TextStyle(
+            //               color: Theme.of(context).textTheme.bodySmall!.color,
+            //               fontSize: 18,
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //     const SizedBox(
+            //       height: 5,
+            //     ),
+            //     Padding(
+            //       padding: const EdgeInsets.symmetric(
+            //         horizontal: 30,
+            //       ),
+            //       child: Container(
+            //         decoration: BoxDecoration(
+            //           color: const Color.fromARGB(255, 128, 128, 128),
+            //           borderRadius: BorderRadius.circular(15),
+            //         ),
+            //         child: const Column(
+            //           // 차후 ListView로 바꿀 예정
+            //           children: [
+            //             News(
+            //               newsTitle: "넷플릭스, 광고 전망 낙관 제프리스",
+            //               stockName: '넷플릭스',
+            //               stockPrice: '160.9500',
+            //               stockRate: '-4.09',
+            //             ),
+            //             News(
+            //               newsTitle: '패스틀리, 단기 악재 직면 - BofA',
+            //               stockName: '패스틀리',
+            //               stockPrice: '160.7500',
+            //               stockRate: '-0.64',
+            //             ),
+            //           ],
+            //         ),
+            //       ),
+            //     ),
+            //   ]),
+            // ),
