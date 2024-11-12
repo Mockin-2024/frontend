@@ -1,4 +1,4 @@
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/storage/user_email.dart';
 import 'package:mockin/dto/analysis/news_request_dto.dart';
 import 'package:mockin/models/news_content_model.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +19,8 @@ class AnalysisApi {
     List<NewsContentModel> news = [];
     final url = DTO.convert('$baseUrl/$quo/$analysis/$reqnews');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     // print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');

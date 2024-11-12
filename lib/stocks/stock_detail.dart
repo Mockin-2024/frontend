@@ -32,7 +32,7 @@ class _StockDetailState extends State<StockDetail> {
 
   final Map<String, List<dynamic>> gapGUBN = {
     '1일': ['0', 1],
-    '1주': ['1', 1],
+    '1주': ['0', 5],
     '1달': ['2', 1],
     '3달': ['2', 3],
     '1년': ['2', 12],
@@ -72,6 +72,7 @@ class _StockDetailState extends State<StockDetail> {
   void _onDateSeleted(String date) async {
     // gap인 날만큼의 종가를 들고와서 현재
     // price와 계산 후 diff, rate를 계산
+    Future.delayed(const Duration(milliseconds: 200));
     seletedGap = date;
     pastPrice = double.parse(
       await BasicApi.termPrice(

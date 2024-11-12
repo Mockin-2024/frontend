@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mockin/afterlogin/navi.dart';
 import 'package:mockin/api/oauth2_api.dart';
 import 'package:mockin/dto/account/user_email_dto.dart';
@@ -69,12 +70,10 @@ class _WaitTokenState extends State<WaitToken> {
       await realToken();
 
       if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const Navi(),
-          ),
-        );
+        Future.delayed(Duration.zero, () {
+          if (!context.mounted) return;
+          context.replace('/');
+        });
       }
     } catch (error) {
       print('Error: $error');

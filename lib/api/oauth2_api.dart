@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/storage/user_email.dart';
 import 'package:mockin/dto/account/user_email_dto.dart';
 import 'package:mockin/storage/jwt_token.dart';
 
@@ -21,7 +21,7 @@ class Oauth2Api {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       // body: jsonEncode(DTO.toJson()),
     );
@@ -43,7 +43,7 @@ class Oauth2Api {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       // body: jsonEncode(DTO.toJson()),
     );
@@ -64,7 +64,7 @@ class Oauth2Api {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       // body: jsonEncode(DTO.toJson()),
     );
@@ -85,7 +85,7 @@ class Oauth2Api {
       headers: {
         'Content-Type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       // body: jsonEncode(DTO.toJson()),
     );

@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:http/http.dart' as http;
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/storage/user_email.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/dto/basic/current_detailed_dto.dart';
 import 'package:mockin/dto/basic/current_price_dto.dart';
@@ -43,7 +43,8 @@ class BasicApi {
     List<BasicStockModel> stockInstances = [];
     final url = DTO.convert('$baseUrl/$quo/$basic/$search');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     // print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
@@ -96,7 +97,8 @@ class BasicApi {
   }) async {
     final url = DTO.convert('$baseUrl/$quo/$basic/$current');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -114,7 +116,8 @@ class BasicApi {
     List<String> clsPrice = [];
     final url = DTO.convert('$baseUrl/$quo/$basic/$term');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -122,6 +125,7 @@ class BasicApi {
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
       for (var price in prices) {
         clsPrice.add(price['clos']);
+        print('>>> ${price['xymd']} ${price['clos']}');
       }
       return clsPrice[idx];
     }
@@ -134,7 +138,8 @@ class BasicApi {
   }) async {
     final url = DTO.convert('$baseUrl/$quo/$basic/$jjh');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -150,7 +155,8 @@ class BasicApi {
   }) async {
     final url = DTO.convert('$baseUrl/$quo/$basic/$paymentDay');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -166,7 +172,8 @@ class BasicApi {
   }) async {
     final url = DTO.convert('$baseUrl/$quo/$basic/$cpd');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -214,7 +221,8 @@ class BasicApi {
     List<ChartData> datas = [];
     Uri url = DTO.convert('$baseUrl/$quo/$basic/$chart');
     var response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -243,7 +251,7 @@ class BasicApi {
         ).convert('$baseUrl/$quo/$basic/$chart');
         response = await http.get(url, headers: {
           'Authorization':
-              'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+              'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
         });
         if (response.statusCode == 200) {
           bunbongs = jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -294,7 +302,8 @@ class BasicApi {
     List<ChartData> datas = [];
     final url = DTO.convert('$baseUrl/$quo/$basic/$indexChart');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     var content = jsonDecode(utf8.decode(response.bodyBytes));
     // print('>>> $content');
@@ -327,7 +336,8 @@ class BasicApi {
     HogaDataModel data = HogaDataModel();
     final url = DTO.convert('$baseUrl/$quo/$basic/$cur10hoga');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     if (response.statusCode == 200) {
       var content = jsonDecode(utf8.decode(response.bodyBytes));
