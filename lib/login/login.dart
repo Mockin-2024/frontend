@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mockin/dto/login/login_dto.dart';
-import 'package:mockin/login/find_pw.dart';
 import 'package:mockin/api/login_api.dart';
-import 'package:mockin/login/info_register.dart';
-import 'package:mockin/login/signup.dart';
 import 'package:mockin/widgets/alert.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:mockin/widgets/password_input.dart';
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/storage/user_email.dart';
 import 'dart:async';
 import 'package:mockin/widgets/text_input.dart';
 import 'package:mockin/storage/jwt_token.dart';
@@ -112,14 +110,11 @@ class _LoginState extends State<Login> {
                       String result = await loginReq();
                       if (result != '') {
                         UserEmail().saveEmail(email.text);
-                        JwtToken.save(UserEmail().getEmail()!, result);
-                        if (!context.mounted) return;
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => InfoRegister(),
-                          ),
-                        );
+                        JwtToken().save(UserEmail().getEmail()!, result);
+                        Future.delayed(Duration.zero, () {
+                          if (!context.mounted) return;
+                          context.replace('/register');
+                        });
                       } else {
                         if (!context.mounted) return;
                         Alert.showAlert(context, '로그인', '실패');
@@ -143,14 +138,7 @@ class _LoginState extends State<Login> {
                 Column(
                   children: [
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignUp(),
-                          ),
-                        );
-                      },
+                      onTap: () => context.go('/signup'),
                       child: Text(
                         '회원가입',
                         style: TextStyle(
@@ -163,14 +151,7 @@ class _LoginState extends State<Login> {
                       height: 10,
                     ),
                     GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const FindPw(),
-                          ),
-                        );
-                      },
+                      onTap: () => context.go('/findpw'),
                       child: Text(
                         '비밀번호 찾기',
                         style: TextStyle(

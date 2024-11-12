@@ -1,5 +1,5 @@
 import 'package:http/http.dart' as http;
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/storage/user_email.dart';
 import 'dart:convert';
 import 'package:mockin/dto/account/acnt_num_register_dto.dart';
 import 'package:mockin/dto/account/key_pair_register_dto.dart';
@@ -22,7 +22,7 @@ class AccountApi {
       headers: {
         'Content-type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -43,7 +43,7 @@ class AccountApi {
       headers: {
         'Content-type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -64,7 +64,7 @@ class AccountApi {
       headers: {
         'Content-type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );

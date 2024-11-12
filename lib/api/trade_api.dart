@@ -13,7 +13,7 @@ import 'package:mockin/models/order_model.dart';
 import 'package:mockin/models/personal_stock_item.dart';
 import 'package:mockin/models/stock_breakdown.dart';
 import 'package:mockin/storage/jwt_token.dart';
-import 'package:mockin/afterlogin/user_email.dart';
+import 'package:mockin/storage/user_email.dart';
 
 class TradeApi {
   static const String baseUrl = 'https://api.mockin2024.com';
@@ -36,7 +36,7 @@ class TradeApi {
       headers: {
         'Content-type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -57,7 +57,7 @@ class TradeApi {
       headers: {
         'Content-type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -78,7 +78,7 @@ class TradeApi {
       headers: {
         'Content-type': 'application/json',
         'Authorization':
-            'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+            'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
       body: jsonEncode(DTO.toJson()),
     );
@@ -97,7 +97,8 @@ class TradeApi {
     List<String> tmp = [];
     final url = DTO.convert('$baseUrl/$trading/$psamount');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     // print('>>> 매수가능금액조회 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
@@ -115,7 +116,8 @@ class TradeApi {
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$pBalance');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     // print('>>> 체결기준현재잔고 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
@@ -133,7 +135,8 @@ class TradeApi {
     List<PersonalStockItem> li = [];
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     // print('>>> 잔고 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
@@ -158,7 +161,8 @@ class TradeApi {
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     // print('>>> 보유 주식 확인(잔고) ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
@@ -182,7 +186,8 @@ class TradeApi {
   }) async {
     final url = DTO.convert('$baseUrl/$trading/$lBalance');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     // print(
     //    '>>> 매입 평균 가격/보유 수량(잔고) ${jsonDecode(utf8.decode(response.bodyBytes))}');
@@ -206,7 +211,8 @@ class TradeApi {
     List<StockBreakdown> nc = [];
     final url = DTO.convert('$baseUrl/$trading/$mcnj');
     final response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
     if (response.statusCode == 200) {
@@ -229,7 +235,8 @@ class TradeApi {
     List<OrderModel> orders = [];
     Uri url = DTO.convert('$baseUrl/$trading/$jmcn');
     var response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     if (response.statusCode == 200) {
       jd = jsonDecode(utf8.decode(response.bodyBytes));
@@ -256,7 +263,7 @@ class TradeApi {
         ).convert('$baseUrl/$trading/$jmcn');
         response = await http.get(url, headers: {
           'Authorization':
-              'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+              'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
         });
         if (response.statusCode == 200) {
           jd = jsonDecode(utf8.decode(response.bodyBytes));
@@ -291,7 +298,8 @@ class TradeApi {
     List<OrderModel> orders = [];
     Uri url = DTO.convert('$baseUrl/$trading/$jmcn');
     var response = await http.get(url, headers: {
-      'Authorization': 'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
     if (response.statusCode == 200) {
       jd = jsonDecode(utf8.decode(response.bodyBytes));
@@ -320,7 +328,7 @@ class TradeApi {
         ).convert('$baseUrl/$trading/$jmcn');
         response = await http.get(url, headers: {
           'Authorization':
-              'Bearer ${await JwtToken.read(UserEmail().getEmail()!)}',
+              'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
         });
         if (response.statusCode == 200) {
           jd = jsonDecode(utf8.decode(response.bodyBytes));
