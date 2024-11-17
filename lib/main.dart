@@ -7,10 +7,7 @@ import 'package:mockin/login/info_register.dart';
 import 'package:mockin/login/login.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:mockin/login/signup.dart';
-import 'package:mockin/property/personal_stock.dart';
 import 'package:mockin/provider/exchange_provider.dart';
-import 'package:mockin/stocks/stock.dart';
-import 'package:mockin/stocks/stock_how_invest.dart';
 import 'package:mockin/storage/jwt_token.dart';
 import 'package:provider/provider.dart';
 
