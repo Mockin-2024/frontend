@@ -46,7 +46,7 @@ class BasicApi {
       'Authorization':
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
-    // print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> stocks =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -119,13 +119,12 @@ class BasicApi {
       'Authorization':
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
-
+    print('>>> 기간별시세 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> prices =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
       for (var price in prices) {
         clsPrice.add(price['clos']);
-        print('>>> ${price['xymd']} ${price['clos']}');
       }
       return clsPrice[idx];
     }
@@ -225,6 +224,7 @@ class BasicApi {
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
+    print('>>> 주식분봉조회 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       List<dynamic> bunbongs =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -342,7 +342,6 @@ class BasicApi {
     if (response.statusCode == 200) {
       var content = jsonDecode(utf8.decode(response.bodyBytes));
       data = HogaDataModel.fromJson(content);
-      print('>>> $content');
       return data;
     }
     return data;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mockin/storage/user_email.dart';
-import 'package:mockin/afterlogin/wait_token.dart';
 import 'package:mockin/dto/account/acnt_num_register_dto.dart';
 import 'package:mockin/dto/account/key_pair_register_dto.dart';
 import 'package:mockin/widgets/alert.dart';

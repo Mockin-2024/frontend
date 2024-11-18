@@ -59,7 +59,6 @@ class _OrderListState extends State<OrderList> {
         ),
       );
     }
-    print('>>> key ${newOrders[1]}');
     setState(() {
       orders.addAll(newOrders[0]);
       key = newOrders[1];
