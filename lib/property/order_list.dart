@@ -103,7 +103,7 @@ class _OrderListState extends State<OrderList> {
                 itemBuilder: (context, index) {
                   if (index == orders.length) {
                     return const Center(
-                      child: CircularProgressIndicator(),
+                      child: CircularProgressIndicator(color: Colors.black),
                     );
                   }
                   return OrderListItem(
