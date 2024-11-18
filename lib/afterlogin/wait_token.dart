@@ -63,8 +63,8 @@ class _WaitTokenState extends State<WaitToken> {
 
   void doit() async {
     try {
-      await mockSocketKey();
-      await realSocketKey();
+      // await mockSocketKey();
+      // await realSocketKey();
       await mockToken();
       await realToken();
 
@@ -91,7 +91,7 @@ class _WaitTokenState extends State<WaitToken> {
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(color: Colors.black),
       ),
     );
   }
