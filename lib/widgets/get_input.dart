@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 
-class TextInput extends StatelessWidget {
+class GetInput extends StatelessWidget {
   final String name;
   final TextEditingController tec;
   bool isChecking;
 
-  TextInput({
+  GetInput({
     super.key,
     required this.name,
     required this.tec,

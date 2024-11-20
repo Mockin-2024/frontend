@@ -4,7 +4,7 @@ import 'package:mockin/dto/trading/cancel_correction_dto.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/stocks/stock_detail.dart';
 import 'package:mockin/widgets/alert.dart';
-import 'package:mockin/widgets/text_input.dart';
+import 'package:mockin/widgets/get_input.dart';
 
 class OrderDetailed extends StatelessWidget {
   OrderDetailed({
@@ -154,7 +154,7 @@ class OrderDetailed extends StatelessWidget {
                         ),
                         TableCell(
                           child: state
-                              ? TextInput(name: '가격 입력', tec: pText)
+                              ? GetInput(name: '가격 입력', tec: pText)
                               : Text(
                                   '${double.parse(price).toStringAsFixed(3)}$sign',
                                   style: const TextStyle(
@@ -175,7 +175,7 @@ class OrderDetailed extends StatelessWidget {
                         ),
                         TableCell(
                           child: state
-                              ? TextInput(name: '수량 입력', tec: aText)
+                              ? GetInput(name: '수량 입력', tec: aText)
                               : Text(
                                   '$amount주',
                                   style: const TextStyle(
