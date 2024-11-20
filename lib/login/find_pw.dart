@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/widgets/alert.dart';
-import 'package:mockin/widgets/text_input.dart';
+import 'package:mockin/widgets/get_input.dart';
 
 class FindPw extends StatefulWidget {
   const FindPw({super.key});
@@ -49,8 +49,8 @@ class _FindPwState extends State<FindPw> {
           const SizedBox(
             height: 45,
           ),
-          TextInput(name: 'email', tec: email),
-          TextInput(name: 'nickname', tec: nickName),
+          GetInput(name: 'email', tec: email),
+          GetInput(name: 'nickname', tec: nickName),
           const SizedBox(
             height: 50,
           ),
