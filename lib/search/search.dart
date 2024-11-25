@@ -5,7 +5,7 @@ import 'package:mockin/models/basic_stock_model.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/widgets/base_rank.dart';
 import 'package:mockin/widgets/exchange.dart';
-import 'package:mockin/widgets/text_input.dart';
+import 'package:mockin/widgets/get_input.dart';
 import 'package:provider/provider.dart';
 import '../provider/exchange_provider.dart';
 
@@ -372,8 +372,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               if (isCurpriceChecked ?? false)
                 Column(
                   children: [
-                    TextInput(name: '최소 현재가', tec: curpriceMinController),
-                    TextInput(name: '최대 현재가', tec: curpriceMaxController),
+                    GetInput(name: '최소 현재가', tec: curpriceMinController),
+                    GetInput(name: '최대 현재가', tec: curpriceMaxController),
                   ],
                 ),
               CheckboxListTile(
@@ -391,8 +391,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               if (isUpdownrateChecked ?? false)
                 Column(
                   children: [
-                    TextInput(name: '최소 등락율', tec: updownrateMinController),
-                    TextInput(name: '최대 등락율', tec: updownrateMaxController),
+                    GetInput(name: '최소 등락율', tec: updownrateMinController),
+                    GetInput(name: '최대 등락율', tec: updownrateMaxController),
                   ],
                 ),
               CheckboxListTile(
@@ -410,8 +410,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               if (isMarketcapitalChecked ?? false)
                 Column(
                   children: [
-                    TextInput(name: '최소 시가총액', tec: marketcapitalMinController),
-                    TextInput(name: '최대 시가총액', tec: marketcapitalMaxController),
+                    GetInput(name: '최소 시가총액', tec: marketcapitalMinController),
+                    GetInput(name: '최대 시가총액', tec: marketcapitalMaxController),
                   ],
                 ),
               CheckboxListTile(
@@ -429,8 +429,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               if (isTradeamountChecked ?? false)
                 Column(
                   children: [
-                    TextInput(name: '최소 거래대금', tec: tradeamountMinController),
-                    TextInput(name: '최대 거래대금', tec: tradeamountMaxController),
+                    GetInput(name: '최소 거래대금', tec: tradeamountMinController),
+                    GetInput(name: '최대 거래대금', tec: tradeamountMaxController),
                   ],
                 ),
               CheckboxListTile(
@@ -448,8 +448,8 @@ class _FilterBottomSheetState extends State<FilterBottomSheet> {
               if (isTradevolumeChecked ?? false)
                 Column(
                   children: [
-                    TextInput(name: '최소 거래량', tec: tradevolumeMinController),
-                    TextInput(name: '최대 거래량', tec: tradevolumeMaxController),
+                    GetInput(name: '최소 거래량', tec: tradevolumeMinController),
+                    GetInput(name: '최대 거래량', tec: tradevolumeMaxController),
                   ],
                 ),
               Center(

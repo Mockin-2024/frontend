@@ -69,7 +69,7 @@ class _WaitTokenState extends State<WaitToken> {
       await realToken();
 
       if (mounted) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(
             builder: (context) => const Navi(),

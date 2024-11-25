@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter/services.dart';
 import 'package:mockin/dto/login/login_dto.dart';
 import 'package:mockin/api/login_api.dart';
 import 'package:mockin/dto/login/token_validation_dto.dart';
+import 'package:mockin/login/find_pw.dart';
+import 'package:mockin/login/info_register.dart';
+import 'package:mockin/login/signup.dart';
 import 'package:mockin/widgets/alert.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:mockin/widgets/password_input.dart';
 import 'package:mockin/storage/user_email.dart';
 import 'dart:async';
-import 'package:mockin/widgets/text_input.dart';
+import 'package:mockin/widgets/get_input.dart';
 import 'package:mockin/storage/jwt_token.dart';
 
 class Login extends StatefulWidget {
@@ -19,7 +22,7 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool? _autoLogin;
+  bool _autoLogin = false;
   String? lastEmail, token, rst;
   final email = TextEditingController();
   final password = TextEditingController();
@@ -42,14 +45,22 @@ class _LoginState extends State<Login> {
           setState(() {
             _autoLogin = true;
           });
-          FlutterNativeSplash.remove();
-          return;
         }
       }
     }
-    setState(() {
-      _autoLogin = false;
-    });
+    if (_autoLogin) {
+      UserEmail().saveEmail(lastEmail!);
+      autoLoginTokenSave();
+      if (mounted) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => InfoRegister()),
+            (route) => false,
+          );
+        });
+      }
+    }
     FlutterNativeSplash.remove();
   }
 
@@ -68,7 +79,6 @@ class _LoginState extends State<Login> {
   void autoLoginTokenSave() async {
     await JwtToken().save('lastEmail', UserEmail().getEmail()!);
     await JwtToken().save(UserEmail().getEmail()!, rst!);
-    print('>>> 저장한 토큰 ${await JwtToken().read(UserEmail().getEmail()!)}');
   }
 
   @override
@@ -79,19 +89,37 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    if (_autoLogin == true) {
-      // 자동 로그인
+    DateTime? lastPressedAt;
+    const Duration backPressDuration = Duration(seconds: 2);
 
-      UserEmail().saveEmail(lastEmail!);
-
-      autoLoginTokenSave();
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        context.replace('/register');
-      });
+    void showExitWarning(BuildContext context) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('한 번 더 뒤로가기를 누르면 종료됩니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
     }
-    if (_autoLogin == false) {
-      // 로그인 필요
-      return Scaffold(
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          print('>>> didPop 호출');
+          return;
+        }
+        final now = DateTime.now();
+
+        if (lastPressedAt == null ||
+            now.difference(lastPressedAt!) > backPressDuration) {
+          print('>>> $now');
+          lastPressedAt = now;
+          showExitWarning(context);
+          return;
+        }
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
@@ -119,7 +147,7 @@ class _LoginState extends State<Login> {
                   const SizedBox(
                     height: 20,
                   ),
-                  TextInput(name: 'email', tec: email),
+                  GetInput(name: 'email', tec: email),
                   PasswordInput(name: 'password', tec: password),
                   // Padding(
                   //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 3),
@@ -158,7 +186,12 @@ class _LoginState extends State<Login> {
                               .save(UserEmail().getEmail()!, result);
                           Future.delayed(Duration.zero, () {
                             if (!context.mounted) return;
-                            context.replace('/register');
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InfoRegister(),
+                              ),
+                            );
                           });
                         } else {
                           if (!context.mounted) return;
@@ -183,7 +216,14 @@ class _LoginState extends State<Login> {
                   Column(
                     children: [
                       GestureDetector(
-                        onTap: () => context.go('/signup'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const SignUp(),
+                            ),
+                          );
+                        },
                         child: Text(
                           '회원가입',
                           style: TextStyle(
@@ -196,7 +236,14 @@ class _LoginState extends State<Login> {
                         height: 10,
                       ),
                       GestureDetector(
-                        onTap: () => context.go('/findpw'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const FindPw(),
+                            ),
+                          );
+                        },
                         child: Text(
                           '비밀번호 찾기',
                           style: TextStyle(
@@ -211,13 +258,6 @@ class _LoginState extends State<Login> {
               ),
             ],
           ),
-        ),
-      );
-    }
-    return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(
-          color: Colors.black,
         ),
       ),
     );

@@ -4,7 +4,7 @@ import 'package:mockin/dto/login/email_auth_dto.dart';
 import 'package:mockin/dto/login/send_to_email_dto.dart';
 import 'package:mockin/dto/login/signup_dto.dart';
 import 'package:mockin/widgets/alert.dart';
-import 'package:mockin/widgets/text_input.dart';
+import 'package:mockin/widgets/get_input.dart';
 import 'package:mockin/widgets/password_input.dart';
 import 'dart:async';
 
@@ -138,7 +138,7 @@ class _SignUpState extends State<SignUp> {
             const SizedBox(
               height: 45,
             ),
-            TextInput(
+            GetInput(
               name: 'email',
               tec: email,
               isChecking: !isRunning && emailNotCertified,
@@ -185,7 +185,7 @@ class _SignUpState extends State<SignUp> {
                           color: Colors.black,
                         ),
                       ),
-                      TextInput(name: '인증번호 입력', tec: certified),
+                      GetInput(name: '인증번호 입력', tec: certified),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(40, 3, 0, 15),
                         child: Row(
@@ -225,7 +225,7 @@ class _SignUpState extends State<SignUp> {
             if (!emailNotCertified)
               Column(
                 children: [
-                  TextInput(
+                  GetInput(
                     name: 'nickname',
                     tec: nickName,
                     isChecking: userSignupGoing,

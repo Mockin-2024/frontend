@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/index_chart_dto.dart';
 import 'package:mockin/widgets/index_chart_widget.dart';
@@ -86,118 +87,149 @@ class _StockState extends State<Stock> {
   @override
   Widget build(BuildContext context) {
     var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 60),
-            const Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Mockin',
-                      style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600)),
-                  SearchButton(),
-                ],
-              ),
-            ),
-            SizedBox(
-                height: MediaQuery.of(context).size.height * 0.16,
-                child: FutureBuilder(
-                  future: indexChartDatas,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      var chartDatas = snapshot.data!;
-                      return ListView.builder(
-                          padding: EdgeInsets.zero,
-                          itemCount: chartDatas.length,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return IndexChartWidget(
-                              name: chartDatas[index][0],
-                              price: double.parse(chartDatas[index][1][0])
-                                  .toStringAsFixed(2),
-                              rate: chartDatas[index][1][1][0] == '-'
-                                  ? '${chartDatas[index][1][1]}%'
-                                  : '+${chartDatas[index][1][1]}%',
-                              chartData: chartDatas[index][1][2],
-                            );
-                          });
-                    }
-                    return const Text('');
-                  },
-                )),
-            Column(children: [
-              const Exchange(),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 40,
-                  vertical: 8,
+    DateTime? lastPressedAt;
+    const Duration backPressDuration = Duration(seconds: 2);
+
+    void showExitWarning(BuildContext context) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('한 번 더 뒤로가기를 누르면 종료됩니다.'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) {
+          print('>>> didPop 호출');
+          return;
+        }
+        final now = DateTime.now();
+
+        if (lastPressedAt == null ||
+            now.difference(lastPressedAt!) > backPressDuration) {
+          print('>>> $now');
+          lastPressedAt = now;
+          showExitWarning(context);
+          return;
+        }
+        SystemNavigator.pop();
+      },
+      child: Scaffold(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 60),
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 10,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '실시간 차트',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.bodySmall!.color,
-                        fontSize: 18,
-                      ),
-                    ),
-                    DropdownButton(
-                        value: _selectedRank,
-                        items: _ranking.map((value) {
-                          return DropdownMenuItem(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
-                        onChanged: (value) {
-                          setState(() {
-                            _selectedRank = value!;
-                          });
-                        }),
+                    Text('Mockin',
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600)),
+                    SearchButton(),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 5,
-              ),
-              RankContent(trade: trade, opt: trans[_selectedRank]!),
-            ]),
-            Column(children: [
-              const SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 40,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      '최신 금융 뉴스',
-                      style: TextStyle(
-                        color: Theme.of(context).textTheme.bodySmall!.color,
-                        fontSize: 18,
+              SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.16,
+                  child: FutureBuilder(
+                    future: indexChartDatas,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        var chartDatas = snapshot.data!;
+                        return ListView.builder(
+                            padding: EdgeInsets.zero,
+                            itemCount: chartDatas.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              return IndexChartWidget(
+                                name: chartDatas[index][0],
+                                price: double.parse(chartDatas[index][1][0])
+                                    .toStringAsFixed(2),
+                                rate: chartDatas[index][1][1][0] == '-'
+                                    ? '${chartDatas[index][1][1]}%'
+                                    : '+${chartDatas[index][1][1]}%',
+                                chartData: chartDatas[index][1][2],
+                              );
+                            });
+                      }
+                      return const Text('');
+                    },
+                  )),
+              Column(children: [
+                const Exchange(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 40,
+                    vertical: 8,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        '실시간 차트',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                          fontSize: 18,
+                        ),
                       ),
-                    ),
-                  ],
+                      DropdownButton(
+                          value: _selectedRank,
+                          items: _ranking.map((value) {
+                            return DropdownMenuItem(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedRank = value!;
+                            });
+                          }),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              const NewsWidget(),
-            ]),
-          ],
+                const SizedBox(
+                  height: 5,
+                ),
+                RankContent(trade: trade, opt: trans[_selectedRank]!),
+              ]),
+              Column(children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 40,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text(
+                        '최신 금융 뉴스',
+                        style: TextStyle(
+                          color: Theme.of(context).textTheme.bodySmall!.color,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 5,
+                ),
+                const NewsWidget(),
+              ]),
+            ],
+          ),
         ),
       ),
     );
