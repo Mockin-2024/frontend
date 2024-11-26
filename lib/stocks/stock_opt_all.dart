@@ -16,12 +16,14 @@ class StockOptAll extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        flexibleSpace: Container(color: Colors.white),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(
-            height: 60,
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(40, 0, 0, 10),
             child: Text(
