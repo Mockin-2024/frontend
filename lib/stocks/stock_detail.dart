@@ -98,7 +98,7 @@ class _StockDetailState extends State<StockDetail> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(110.0),
+            preferredSize: const Size.fromHeight(150.0),
             child: Column(children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
