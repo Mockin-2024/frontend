@@ -124,7 +124,7 @@ class TradeApi {
       return jsonDecode(utf8.decode(response.bodyBytes))['output3']
           ['tot_asst_amt'];
     }
-    print('>>> failed');
+    // print('>>> failed');
     return '';
   }
 
@@ -150,7 +150,7 @@ class TradeApi {
       dynamic a = jsonDecode(utf8.decode(response.bodyBytes))['output2'];
       return [li, a['frcr_pchs_amt1'], a['ovrs_tot_pfls'], a['tot_pftrt']];
     }
-    print('>>> failed');
+    // print('>>> failed');
     return [li, '0.0', '0.0', '0.0'];
   }
 
@@ -170,12 +170,12 @@ class TradeApi {
           jsonDecode(utf8.decode(response.bodyBytes))['output1'];
       for (var many in how) {
         if (many['ovrs_item_name'] == stockName) {
-          print('>>> you have!');
+          // print('>>> you have!');
           return true;
         }
       }
     }
-    print('>>> don\'t have');
+    // print('>>> don\'t have');
     return false;
   }
 
@@ -200,7 +200,6 @@ class TradeApi {
         }
       }
     }
-    print('>>> don\'t have');
     return ['0.0', '0.0'];
   }
 
@@ -222,7 +221,7 @@ class TradeApi {
       }
       return nc;
     }
-    print('>>> failed');
+    // print('>>> failed');
     return nc;
   }
 
@@ -237,7 +236,7 @@ class TradeApi {
       'Authorization':
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
-    print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       jd = jsonDecode(utf8.decode(response.bodyBytes));
       List<dynamic> li = jd['output'];
@@ -252,7 +251,7 @@ class TradeApi {
       }
       return [orders, jd['ctx_area_nk200'].toString().replaceAll(' ', '')];
     }
-    print('>>> failed');
+    // print('>>> failed');
     return [orders, ''];
   }
 
@@ -319,7 +318,7 @@ class TradeApi {
       }
       return orders;
     }
-    print('>>> failed');
+    // print('>>> failed');
     return orders;
   }
 }

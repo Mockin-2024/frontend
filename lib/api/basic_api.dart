@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:http/http.dart' as http;
+import 'package:mockin/storage/favorite_data.dart';
 import 'package:mockin/storage/user_email.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/dto/basic/current_detailed_dto.dart';
@@ -46,7 +47,7 @@ class BasicApi {
       'Authorization':
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
-    print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> 조건 검색 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> stocks =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -91,6 +92,34 @@ class BasicApi {
     return stockInstances;
   }
 
+  // 조건검색 - 선호종목 api
+  static Future<List<BasicStockModel>> favoriteSearch({
+    required ConditionSearchDTO DTO,
+  }) async {
+    List<BasicStockModel> stockInstances = [];
+    List<String> favoriteList = FavoriteData().excdFavorite(excd: DTO.EXCD);
+    final url = DTO.convert('$baseUrl/$quo/$basic/$search');
+    final response = await http.get(url, headers: {
+      'Authorization':
+          'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
+    });
+    // print(
+    //     '>>> 선호 종목 검색 ${DTO.EXCD} ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    if (response.statusCode == 200) {
+      // print('>>> 선호 종목 검색 성공');
+      final List<dynamic> stocks =
+          jsonDecode(utf8.decode(response.bodyBytes))['output2'];
+      for (var stock in stocks) {
+        if (favoriteList.contains(stock['symb'].toString())) {
+          stockInstances.add(
+            BasicStockModel.fromJson(stock),
+          );
+        }
+      }
+    }
+    return stockInstances;
+  }
+
   // 현재체결가 api (매도불가)
   static Future<List<String>> currentPrice({
     required CurrentPriceDTO DTO,
@@ -119,7 +148,7 @@ class BasicApi {
       'Authorization':
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
-    print('>>> 기간별시세 ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> 기간별시세 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       final List<dynamic> prices =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -177,7 +206,7 @@ class BasicApi {
 
     if (response.statusCode == 200) {
       var jd = jsonDecode(utf8.decode(response.bodyBytes))['output'];
-      print('>>> 현재가상세 $jd');
+      // print('>>> 현재가상세 $jd');
       return [
         jd['high'], // 고가
         jd['low'], // 저가
@@ -194,7 +223,7 @@ class BasicApi {
         jd['t_rate'], // 당일환율
       ];
     }
-    print('>>> 현재가상세 실패');
+    // print('>>> 현재가상세 실패');
     return [
       '0.0', // 고가
       '0.0', // 저가
@@ -224,7 +253,7 @@ class BasicApi {
           'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
     });
 
-    print('>>> 주식분봉조회 ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> 주식분봉조회 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       List<dynamic> bunbongs =
           jsonDecode(utf8.decode(response.bodyBytes))['output2'];
@@ -326,7 +355,7 @@ class BasicApi {
         datas
       ];
     }
-    print('>>> 지수분봉조회 실패');
+    // print('>>> 지수분봉조회 실패');
     return ['0.0', '0.0', datas];
   }
 

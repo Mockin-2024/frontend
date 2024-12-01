@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/provider/exchange_trans.dart';
 import 'package:mockin/stocks/stock_detail.dart';
+import 'package:mockin/storage/favorite_data.dart';
 
-class BaseRank extends StatelessWidget {
+class BaseRank extends StatefulWidget {
   final String excd, stockName, stockSymb, stockPrice, stockRate;
 
   const BaseRank({
@@ -13,6 +14,25 @@ class BaseRank extends StatelessWidget {
     required this.stockPrice,
     required this.stockRate,
   });
+
+  @override
+  State<BaseRank> createState() => _BaseRankState();
+}
+
+class _BaseRankState extends State<BaseRank> {
+  void favoriteChange() async {
+    var rst = await FavoriteData().favoriteChange(
+        excd: widget.excd,
+        symb: widget.stockSymb,
+        addOrDelete: FavoriteData()
+            .isFavorite(excd: widget.excd, symb: widget.stockSymb));
+    if (rst) {
+      //print('>>> ${widget.excd} ${widget.stockSymb} 성공');
+    } else {
+      //print('>>> ${widget.excd} ${widget.stockSymb} 실패');
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,9 +53,9 @@ class BaseRank extends StatelessWidget {
               context,
               MaterialPageRoute(
                 builder: (context) => StockDetail(
-                  excd: excd,
-                  stockName: stockName,
-                  stockSymb: stockSymb,
+                  excd: widget.excd,
+                  stockName: widget.stockName,
+                  stockSymb: widget.stockSymb,
                 ),
               ),
             );
@@ -45,29 +65,46 @@ class BaseRank extends StatelessWidget {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.5,
-                child: Text(
-                  stockName,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.w600),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.stockName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          color: Colors.black, fontWeight: FontWeight.w600),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          '${widget.stockPrice}${ExchangeTrans.signExchange[widget.excd]}  ',
+                          style: const TextStyle(color: Colors.black),
+                        ),
+                        Text(
+                          '${widget.stockRate}%',
+                          style: TextStyle(
+                              color: widget.stockRate.contains('-')
+                                  ? Colors.blue
+                                  : Colors.red),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    '$stockPrice${ExchangeTrans.signExchange[excd]}',
-                    style: const TextStyle(color: Colors.black),
-                  ),
-                  Text(
-                    '$stockRate%',
-                    style: TextStyle(
-                        color:
-                            stockRate.contains('-') ? Colors.blue : Colors.red),
-                  ),
-                ],
-              )
+              IconButton(
+                onPressed: () {
+                  favoriteChange();
+                },
+                icon: const Icon(
+                  Icons.favorite,
+                ),
+                color: FavoriteData()
+                        .isFavorite(excd: widget.excd, symb: widget.stockSymb)
+                    ? Colors.red
+                    : Colors.grey,
+              ),
             ],
           ),
         ),

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mockin/api/basic_api.dart';
+import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/dto/basic/index_chart_dto.dart';
+import 'package:mockin/models/basic_stock_model.dart';
+import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/widgets/favorite_rank.dart';
 import 'package:mockin/widgets/index_chart_widget.dart';
 import 'package:mockin/widgets/search_button.dart';
 import 'package:mockin/widgets/exchange.dart';
 import 'package:mockin/widgets/news_widget.dart';
 import 'package:mockin/provider/exchange_provider.dart';
+import 'package:mockin/widgets/text/content_text.dart';
 import 'package:provider/provider.dart';
 import 'package:mockin/widgets/rank_content.dart';
 
@@ -139,33 +144,76 @@ class _StockState extends State<Stock> {
                 ),
               ),
               SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.16,
-                  child: FutureBuilder(
-                    future: indexChartDatas,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        var chartDatas = snapshot.data!;
-                        return ListView.builder(
-                            padding: EdgeInsets.zero,
-                            itemCount: chartDatas.length,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) {
-                              return IndexChartWidget(
-                                name: chartDatas[index][0],
-                                price: double.parse(chartDatas[index][1][0])
-                                    .toStringAsFixed(2),
-                                rate: chartDatas[index][1][1][0] == '-'
-                                    ? '${chartDatas[index][1][1]}%'
-                                    : '+${chartDatas[index][1][1]}%',
-                                chartData: chartDatas[index][1][2],
-                              );
-                            });
-                      }
-                      return const Text('');
-                    },
-                  )),
+                height: MediaQuery.of(context).size.height * 0.16,
+                child: FutureBuilder(
+                  future: indexChartDatas,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      var chartDatas = snapshot.data!;
+                      return ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: chartDatas.length,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            return IndexChartWidget(
+                              name: chartDatas[index][0],
+                              price: double.parse(chartDatas[index][1][0])
+                                  .toStringAsFixed(2),
+                              rate: chartDatas[index][1][1][0] == '-'
+                                  ? '${chartDatas[index][1][1]}%'
+                                  : '+${chartDatas[index][1][1]}%',
+                              chartData: chartDatas[index][1][2],
+                            );
+                          });
+                    }
+                    return const Text('');
+                  },
+                ),
+              ),
+              const Exchange(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 40,
+                      vertical: 8,
+                    ),
+                    child: Text(
+                      '관심 종목',
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodySmall!.color,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  FutureBuilder(
+                      future: BasicApi.favoriteSearch(
+                        DTO: ConditionSearchDTO(
+                          EXCD: ExchangeTrans.trade[trade]!,
+                        ),
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                          List<BasicStockModel> stocks = snapshot.data!;
+                          return Column(
+                            children: [
+                              for (var i = 0; i < stocks.length; i++)
+                                FavoriteRank(
+                                  excd: stocks[i].excd,
+                                  stockName: stocks[i].name,
+                                  stockSymb: stocks[i].symb,
+                                  stockPrice: '${double.parse(stocks[i].last)}',
+                                  stockRate: stocks[i].rate,
+                                ),
+                            ],
+                          );
+                        }
+                        return const ContentText(tt: '해당 거래소의 관심 종목이 없습니다!');
+                      }),
+                ],
+              ),
               Column(children: [
-                const Exchange(),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 40,

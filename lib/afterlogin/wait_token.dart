@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mockin/afterlogin/navi.dart';
 import 'package:mockin/api/oauth2_api.dart';
 import 'package:mockin/dto/account/user_email_dto.dart';
+import 'package:mockin/storage/favorite_data.dart';
 
 class WaitToken extends StatefulWidget {
   const WaitToken({super.key});
@@ -67,6 +68,7 @@ class _WaitTokenState extends State<WaitToken> {
       // await realSocketKey();
       await mockToken();
       await realToken();
+      await FavoriteData().init();
 
       if (mounted) {
         Navigator.pushReplacement(
