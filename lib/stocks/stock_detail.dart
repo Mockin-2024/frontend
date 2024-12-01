@@ -9,6 +9,7 @@ import 'package:mockin/stocks/detailed/chart_tab.dart';
 import 'package:mockin/stocks/detailed/hoga_tab.dart';
 import 'package:mockin/stocks/detailed/more_info_tab.dart';
 import 'package:mockin/stocks/detailed/my_stock_tab.dart';
+import 'package:mockin/storage/favorite_data.dart';
 import 'package:mockin/widgets/buy_sell_button.dart';
 
 class StockDetail extends StatefulWidget {
@@ -29,6 +30,20 @@ class _StockDetailState extends State<StockDetail> {
   double price = 0.0, pastPrice = 0.0, diff = 0.0, rate = 0.0;
   String canBuy = '-', seletedGap = '1일';
   bool stockHave = false;
+
+  void favoriteChange() async {
+    var rst = await FavoriteData().favoriteChange(
+        excd: widget.excd,
+        symb: widget.stockSymb,
+        addOrDelete: FavoriteData()
+            .isFavorite(excd: widget.excd, symb: widget.stockSymb));
+    if (rst) {
+      //print('>>> ${widget.excd} ${widget.stockSymb} 성공');
+    } else {
+      //print('>>> ${widget.excd} ${widget.stockSymb} 실패');
+    }
+    setState(() {});
+  }
 
   final Map<String, List<dynamic>> gapGUBN = {
     '1일': ['0', 1],
@@ -97,6 +112,20 @@ class _StockDetailState extends State<StockDetail> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
+          actions: [
+            IconButton(
+              onPressed: () {
+                favoriteChange();
+              },
+              icon: const Icon(
+                Icons.favorite,
+              ),
+              color: FavoriteData()
+                      .isFavorite(excd: widget.excd, symb: widget.stockSymb)
+                  ? Colors.red
+                  : Colors.grey,
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(150.0),
             child: Column(children: [

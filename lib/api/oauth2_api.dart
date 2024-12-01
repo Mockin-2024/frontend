@@ -69,7 +69,7 @@ class Oauth2Api {
       // body: jsonEncode(DTO.toJson()),
     );
     if (response.statusCode == 200) {
-      print('>>> mockToken Body: ${response.body}');
+      // print('>>> mockToken Body: ${response.body}');
       return true;
     }
     return false;
@@ -90,7 +90,7 @@ class Oauth2Api {
       // body: jsonEncode(DTO.toJson()),
     );
     if (response.statusCode == 200) {
-      print('>>> realToken Body: ${response.body}');
+      // print('>>> realToken Body: ${response.body}');
       return true;
     }
     return false;

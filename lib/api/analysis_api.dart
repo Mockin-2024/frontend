@@ -34,7 +34,7 @@ class AnalysisApi {
       }
       return news;
     }
-    print('failed');
+    // print('failed');
     return news;
   }
 }

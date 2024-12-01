@@ -65,7 +65,7 @@ class LoginApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
-    print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['token'];
     }
@@ -84,7 +84,7 @@ class LoginApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
-    print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['message'];
     }
@@ -103,9 +103,9 @@ class LoginApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
-    print('>>> 토큰 인증 api ${jsonDecode(utf8.decode(response.bodyBytes))}');
-    print(
-        '>>> 토큰 인증 api ${jsonDecode(utf8.decode(response.bodyBytes))['token']}');
+    // print('>>> 토큰 인증 api ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print(
+    //     '>>> 토큰 인증 api ${jsonDecode(utf8.decode(response.bodyBytes))['token']}');
     if (response.statusCode == 200) {
       return jsonDecode(utf8.decode(response.bodyBytes))['token'];
     }

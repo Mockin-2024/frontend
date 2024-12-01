@@ -26,7 +26,7 @@ class AccountApi {
       },
       body: jsonEncode(DTO.toJson()),
     );
-    print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
+    // print('>>> ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
       return true;
     }
