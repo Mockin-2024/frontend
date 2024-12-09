@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/models/news_content_model.dart';
-import 'package:mockin/widgets/news.dart';
+import 'package:mockin/widgets/home/news.dart';
 
 class NewsAll extends StatelessWidget {
   const NewsAll({

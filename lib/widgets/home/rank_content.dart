@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/stocks/stock_opt_all.dart';
 import 'package:mockin/widgets/text/one_line.dart';
-import 'package:mockin/widgets/base_rank.dart';
+import 'package:mockin/widgets/home/base_rank.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 
 class RankContent extends StatelessWidget {
   const RankContent({

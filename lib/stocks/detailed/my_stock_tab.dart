@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/trading/ccnl_dto.dart';
 import 'package:mockin/models/order_model.dart';
-import 'package:mockin/widgets/order_list_item.dart';
+import 'package:mockin/widgets/order_list/order_list_item.dart';
 import 'package:mockin/widgets/text/title_text.dart';
 
 class MyStockTab extends StatelessWidget {

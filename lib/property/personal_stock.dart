@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/present_balance_dto.dart';
 import 'package:mockin/models/personal_stock_item.dart';
 import 'package:mockin/property/order_list.dart';
 import 'package:mockin/property/personal_stock_detailed.dart';
-import 'package:mockin/provider/exchange_provider.dart';
-import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/widgets/exchange.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
+import 'package:mockin/riverpod_provider/exchange_notifier.dart';
+import 'package:mockin/widgets/etc/exchange.dart';
 import 'package:mockin/widgets/text/one_line.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-class PersonalStock extends StatelessWidget {
+class PersonalStock extends ConsumerWidget {
   const PersonalStock({super.key});
 
   // final Future<String> test = MoneyApi.getPersonalStockList();
@@ -25,8 +25,8 @@ class PersonalStock extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
-    var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
+  Widget build(BuildContext context, WidgetRef ref) {
+    var trade = ref.watch(exchangeProvider);
     final Future<List<dynamic>> balance = TradeApi.balance(
       DTO: BalanceDTO(
         overseasExchangeCode:

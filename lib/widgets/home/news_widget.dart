@@ -5,7 +5,7 @@ import 'package:mockin/api/analysis_api.dart';
 import 'package:mockin/dto/analysis/news_request_dto.dart';
 import 'package:mockin/models/news_content_model.dart';
 import 'package:mockin/stocks/news_all.dart';
-import 'package:mockin/widgets/news.dart';
+import 'package:mockin/widgets/home/news.dart';
 
 class NewsWidget extends StatelessWidget {
   const NewsWidget({

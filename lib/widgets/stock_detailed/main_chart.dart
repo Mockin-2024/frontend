@@ -3,7 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/models/chart_data.dart';
 import 'package:mockin/stocks/stock_detail.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 import 'package:mockin/dto/basic/stock_chart_dto.dart';
 
 class MainChart extends StatelessWidget {

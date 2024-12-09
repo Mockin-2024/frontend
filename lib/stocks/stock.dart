@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/dto/basic/index_chart_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';
-import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/widgets/favorite_rank.dart';
-import 'package:mockin/widgets/index_chart_widget.dart';
-import 'package:mockin/widgets/search_button.dart';
-import 'package:mockin/widgets/exchange.dart';
-import 'package:mockin/widgets/news_widget.dart';
-import 'package:mockin/provider/exchange_provider.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
+import 'package:mockin/riverpod_provider/exchange_notifier.dart';
+import 'package:mockin/widgets/home/favorite_rank.dart';
+import 'package:mockin/widgets/home/index_chart/index_chart_widget.dart';
+import 'package:mockin/widgets/button/search_button.dart';
+import 'package:mockin/widgets/etc/exchange.dart';
+import 'package:mockin/widgets/home/news_widget.dart';
 import 'package:mockin/widgets/text/content_text.dart';
-import 'package:provider/provider.dart';
-import 'package:mockin/widgets/rank_content.dart';
+import 'package:mockin/widgets/home/rank_content.dart';
 
-class Stock extends StatefulWidget {
+class Stock extends ConsumerStatefulWidget {
   const Stock({super.key});
 
   @override
-  State<Stock> createState() => _StockState();
+  ConsumerState<Stock> createState() => _StockState();
 }
 
-class _StockState extends State<Stock> {
+class _StockState extends ConsumerState<Stock> {
   final _ranking = ['거래대금', '거래량', '시가총액', '급상승', '급하락'];
   var _selectedRank = '거래대금';
   final List<List<String>> _indexs = [
@@ -91,7 +91,7 @@ class _StockState extends State<Stock> {
 
   @override
   Widget build(BuildContext context) {
-    var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
+    var trade = ref.watch(exchangeProvider);
     DateTime? lastPressedAt;
     const Duration backPressDuration = Duration(seconds: 2);
 

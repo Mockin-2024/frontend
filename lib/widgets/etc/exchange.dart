@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:mockin/provider/exchange_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mockin/riverpod_provider/exchange_notifier.dart';
 
-class Exchange extends StatefulWidget {
+class Exchange extends ConsumerStatefulWidget {
   const Exchange({super.key});
 
   @override
-  State<Exchange> createState() => ExchangeState();
+  ConsumerState<Exchange> createState() => ExchangeState();
 }
 
-class ExchangeState extends State<Exchange> {
+class ExchangeState extends ConsumerState<Exchange> {
   final _trade = ['나스닥', '뉴욕', '아멕스', '홍콩', '상해', '심천', '호치민', '하노이', '도쿄'];
 
   @override
   Widget build(BuildContext context) {
-    final exchangeProvider = Provider.of<ExchangeProvider>(context);
-
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
       child: Row(
@@ -32,7 +30,7 @@ class ExchangeState extends State<Exchange> {
                 ),
               ),
               DropdownButton(
-                value: exchangeProvider.selectedTrade,
+                value: ref.watch(exchangeProvider),
                 items: _trade.map(
                   (value) {
                     return DropdownMenuItem(
@@ -43,7 +41,7 @@ class ExchangeState extends State<Exchange> {
                 ).toList(),
                 onChanged: (value) {
                   if (value != null) {
-                    exchangeProvider.selectTrade(value);
+                    ref.read(exchangeProvider.notifier).selectExchange(value);
                   }
                 },
               ),

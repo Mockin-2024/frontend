@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/current_detailed_dto.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 import 'package:mockin/widgets/stock_detailed/more_info/info_box.dart';
 import 'package:mockin/widgets/stock_detailed/more_info/line_bar.dart';
 import 'package:mockin/widgets/text/content_text.dart';

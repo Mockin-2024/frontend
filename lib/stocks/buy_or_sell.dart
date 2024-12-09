@@ -5,8 +5,8 @@ import 'package:mockin/dto/basic/current_price_dto.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
 import 'package:mockin/dto/trading/psamount_dto.dart';
 import 'package:mockin/dto/trading/stock_order_dto.dart';
-import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/widgets/alert.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
+import 'package:mockin/widgets/etc/alert.dart';
 
 class BuyOrSell extends StatefulWidget {
   final String excd, stockName, stockSymb;

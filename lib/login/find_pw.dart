@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/widgets/alert.dart';
-import 'package:mockin/widgets/get_input.dart';
+import 'package:mockin/widgets/etc/alert.dart';
+import 'package:mockin/widgets/input_box/get_input.dart';
 
 class FindPw extends StatefulWidget {
   const FindPw({super.key});
