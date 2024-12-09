@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/models/basic_stock_model.dart';
-import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/widgets/base_rank.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
+import 'package:mockin/widgets/home/base_rank.dart';
 
 class StockOptAll extends StatelessWidget {
   const StockOptAll({

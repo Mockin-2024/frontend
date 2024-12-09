@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/stocks/stock_detail.dart';
-import 'package:mockin/widgets/main_chart.dart';
+import 'package:mockin/widgets/stock_detailed/main_chart.dart';
 
 class ChartTab extends StatefulWidget {
   const ChartTab({

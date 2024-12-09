@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/property/order_detailed.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 
 class OrderListItem extends StatelessWidget {
   const OrderListItem({

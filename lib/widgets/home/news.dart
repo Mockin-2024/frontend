@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 import 'package:mockin/widgets/text/one_line.dart';
 
 class News extends StatelessWidget {

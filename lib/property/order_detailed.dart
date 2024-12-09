@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/trading/cancel_correction_dto.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 import 'package:mockin/stocks/stock_detail.dart';
-import 'package:mockin/widgets/alert.dart';
-import 'package:mockin/widgets/get_input.dart';
+import 'package:mockin/widgets/etc/alert.dart';
+import 'package:mockin/widgets/input_box/get_input.dart';
 
 class OrderDetailed extends StatelessWidget {
   OrderDetailed({

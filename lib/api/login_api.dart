@@ -3,7 +3,6 @@ import 'package:mockin/dto/login/email_auth_dto.dart';
 import 'package:mockin/dto/login/login_dto.dart';
 import 'package:mockin/dto/login/send_to_email_dto.dart';
 import 'dart:convert';
-
 import 'package:mockin/dto/login/signup_dto.dart';
 import 'package:mockin/dto/login/token_validation_dto.dart';
 

@@ -4,13 +4,13 @@ import 'package:mockin/api/trade_api.dart';
 import 'package:mockin/dto/basic/current_price_dto.dart';
 import 'package:mockin/dto/basic/term_dto.dart';
 import 'package:mockin/dto/trading/balance_dto.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 import 'package:mockin/stocks/detailed/chart_tab.dart';
 import 'package:mockin/stocks/detailed/hoga_tab.dart';
 import 'package:mockin/stocks/detailed/more_info_tab.dart';
 import 'package:mockin/stocks/detailed/my_stock_tab.dart';
 import 'package:mockin/storage/favorite_data.dart';
-import 'package:mockin/widgets/buy_sell_button.dart';
+import 'package:mockin/widgets/button/buy_sell_button.dart';
 
 class StockDetail extends StatefulWidget {
   final String excd, stockName, stockSymb;

@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/condition_search_dto.dart';
 import 'package:mockin/models/basic_stock_model.dart';
-import 'package:mockin/provider/exchange_trans.dart';
-import 'package:mockin/widgets/base_rank.dart';
-import 'package:mockin/widgets/exchange.dart';
-import 'package:mockin/widgets/get_input.dart';
-import 'package:provider/provider.dart';
-import '../provider/exchange_provider.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
+import 'package:mockin/riverpod_provider/exchange_notifier.dart';
+import 'package:mockin/widgets/home/base_rank.dart';
+import 'package:mockin/widgets/etc/exchange.dart';
+import 'package:mockin/widgets/input_box/get_input.dart';
 
-class Search extends StatefulWidget {
+class Search extends ConsumerStatefulWidget {
   const Search({super.key});
 
   @override
-  State<Search> createState() => _SearchState();
+  ConsumerState<Search> createState() => _SearchState();
 }
 
-class _SearchState extends State<Search> {
+class _SearchState extends ConsumerState<Search> {
   bool isCurpriceChecked = false; // 현재가
   bool isUpdownrateChecked = false; // 등락율
   bool isMarketcapitalChecked = false; // 시가총액
@@ -148,7 +148,7 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
-    var trade = Provider.of<ExchangeProvider>(context).selectedTrade;
+    var trade = ref.watch(exchangeProvider);
     final Future<List<BasicStockModel>> fetching = BasicApi.conditionSearch(
       DTO: ConditionSearchDTO(
         EXCD: ExchangeTrans.trade[trade]!,

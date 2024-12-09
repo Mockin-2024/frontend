@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mockin/api/basic_api.dart';
 import 'package:mockin/dto/basic/ten_hoga_dto.dart';
 import 'package:mockin/models/hoga_data_model.dart';
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 import 'package:mockin/widgets/stock_detailed/hoga/hoga_content.dart';
 import 'package:mockin/widgets/text/small_text.dart';
 

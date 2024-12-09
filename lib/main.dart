@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mockin/login/login.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:mockin/provider/exchange_provider.dart';
 import 'package:mockin/storage/jwt_token.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,10 +10,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await JwtToken().init();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ExchangeProvider(),
-      child: const App(),
-    ),
+    const ProviderScope(child: App()),
   );
 }
 

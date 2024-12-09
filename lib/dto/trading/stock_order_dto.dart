@@ -1,4 +1,4 @@
-import 'package:mockin/provider/exchange_trans.dart';
+import 'package:mockin/exchange_transform/exchange_trans.dart';
 
 class StockOrderDTO {
   final String excd, symb, orderQuantity, overseasOrderUnitPrice;
