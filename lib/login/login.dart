@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mockin/afterlogin/wait_token.dart';
 import 'package:mockin/dto/login/login_dto.dart';
 import 'package:mockin/api/login_api.dart';
 import 'package:mockin/dto/login/token_validation_dto.dart';
@@ -27,7 +28,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _autoLogin = false;
-  String? lastEmail, token, rst;
+  String? lastEmail, token, loginToken;
+  List<dynamic>? rst;
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -45,7 +47,7 @@ class _LoginState extends State<Login> {
           ),
         );
         // 토큰이 유효함
-        if (rst != '-') {
+        if (rst![0] != '') {
           setState(() {
             _autoLogin = true;
           });
@@ -54,12 +56,21 @@ class _LoginState extends State<Login> {
     }
     if (_autoLogin) {
       UserEmail().saveEmail(lastEmail!); // 얜 마지막으로 저장된 이메일 저장
-      autoLoginTokenSave();
+      autoLoginTokenSave(token: rst![0]);
       if (mounted) {
+        if (rst![1] != '' && rst![2] && rst![3]) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => InfoRegister()),
+              (route) => false,
+            );
+          });
+        }
         WidgetsBinding.instance.addPostFrameCallback((_) {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => InfoRegister()),
+            MaterialPageRoute(builder: (context) => const WaitToken()),
             (route) => false,
           );
         });
@@ -80,9 +91,11 @@ class _LoginState extends State<Login> {
     return '';
   }
 
-  void autoLoginTokenSave() async {
+  void autoLoginTokenSave({
+    required String token,
+  }) async {
     await JwtToken().save('lastEmail', UserEmail().getEmail()!);
-    await JwtToken().save(UserEmail().getEmail()!, rst!);
+    await JwtToken().save(UserEmail().getEmail()!, token);
   }
 
   @override
@@ -111,10 +124,10 @@ class _LoginState extends State<Login> {
                   SignupButton(
                     tt: '로그인',
                     signUpFunction: () async {
-                      rst = await loginReq(); // 로그인 시도
-                      if (rst != '') {
+                      loginToken = await loginReq(); // 로그인 시도
+                      if (loginToken != '') {
                         UserEmail().saveEmail(email.text); // 얜 사용자가 입력한 이메일 저장
-                        autoLoginTokenSave(); // 토큰 저장
+                        autoLoginTokenSave(token: loginToken!); // 토큰 저장
                         Future.delayed(Duration.zero, () {
                           if (!context.mounted) return;
                           Navigator.pushReplacement(
