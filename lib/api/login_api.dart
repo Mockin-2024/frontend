@@ -91,7 +91,7 @@ class LoginApi {
   }
 
   // 토큰 인증 api
-  static Future<String> tokenValidation({
+  static Future<List<dynamic>> tokenValidation({
     required TokenValidationDTO DTO,
   }) async {
     final url = Uri.parse('$baseUrl/$auth/$validation');
@@ -106,8 +106,14 @@ class LoginApi {
     // print(
     //     '>>> 토큰 인증 api ${jsonDecode(utf8.decode(response.bodyBytes))['token']}');
     if (response.statusCode == 200) {
-      return jsonDecode(utf8.decode(response.bodyBytes))['token'];
+      var jd = jsonDecode(utf8.decode(response.bodyBytes));
+      return [
+        jd['token'],
+        jd['accountNumber'],
+        jd['isMockRegistered'],
+        jd['isRealRegistered']
+      ];
     }
-    return '-';
+    return ['', '', false, false];
   }
 }
