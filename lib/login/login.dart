@@ -45,13 +45,14 @@ class _LoginState extends State<Login> {
                   PasswordInput(name: 'password', tec: password),
                   const SizedBox(height: 30),
                   SignupButton(
-                    tt: '로그인',
-                    signUpFunction: LoginService.touchLoginButton(
-                      email: email.text,
-                      password: password.text,
-                      context: context,
-                    ),
-                  ),
+                      tt: '로그인',
+                      signUpFunction: () async {
+                        await LoginService.touchLoginButton(
+                          email: email.text,
+                          password: password.text,
+                          context: context,
+                        );
+                      }),
                   const SizedBox(height: 20),
                   const TextGestureNavigator(movePage: SignUp(), name: '회원가입'),
                   const SizedBox(height: 10),
