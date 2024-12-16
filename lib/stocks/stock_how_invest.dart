@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mockin/widgets/settings/logout.dart';
+import 'package:mockin/widgets/settings/set_auto_login.dart';
 import 'package:mockin/widgets/text/title_text.dart';
 import 'package:mockin/widgets/text/content_text.dart';
 import 'package:mockin/widgets/text/category_text.dart';
@@ -85,6 +87,13 @@ class StockHowInvest extends StatelessWidget {
                     ContentText(tt: '100주 (±10%)\n'),
                     CategoryText(tt: '- 호치민'),
                     ContentText(tt: '100주 (±7%)\n'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Logout(),
+                        SetAutoLogin(),
+                      ],
+                    )
                   ],
                 ),
               ),
