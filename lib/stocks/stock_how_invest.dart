@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:mockin/widgets/etc/double_backbutton_quit.dart';
 import 'package:mockin/widgets/settings/logout.dart';
 import 'package:mockin/widgets/settings/set_auto_login.dart';
 import 'package:mockin/widgets/text/title_text.dart';
@@ -11,37 +11,8 @@ class StockHowInvest extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    DateTime? lastPressedAt;
-    const Duration backPressDuration = Duration(seconds: 2);
-
-    void showExitWarning(BuildContext context) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('한 번 더 뒤로가기를 누르면 종료됩니다.'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    }
-
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) {
-        if (didPop) {
-          print('>>> didPop 호출');
-          return;
-        }
-        final now = DateTime.now();
-
-        if (lastPressedAt == null ||
-            now.difference(lastPressedAt!) > backPressDuration) {
-          print('>>> $now');
-          lastPressedAt = now;
-          showExitWarning(context);
-          return;
-        }
-        SystemNavigator.pop();
-      },
-      child: const Scaffold(
+    return const DoubleBackbuttonQuit(
+      w: Scaffold(
         body: SingleChildScrollView(
           child: Column(
             children: [
