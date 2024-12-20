@@ -17,26 +17,27 @@ class BuySellButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(
-      onPressed: have
-          ? () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => BuyOrSell(
-                    excd: widget.excd,
-                    stockName: widget.stockName,
-                    stockSymb: widget.stockSymb,
-                    buy: bs,
-                  ),
-                ),
-              );
-            }
-          : null,
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: bs ? Colors.red : Colors.blue,
+      ),
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BuyOrSell(
+              excd: widget.excd,
+              stockName: widget.stockName,
+              stockSymb: widget.stockSymb,
+              buy: bs,
+            ),
+          ),
+        );
+      },
       child: Text(
         buySell,
-        style: TextStyle(
-          color: have ? Colors.black : Colors.black.withOpacity(0.5),
+        style: const TextStyle(
+          color: Colors.white,
         ),
       ),
     );

@@ -14,30 +14,6 @@ class WaitToken extends StatefulWidget {
 class _WaitTokenState extends State<WaitToken> {
   bool isLoading = true;
 
-  Future<void> mockSocketKey() async {
-    var tmp = await Oauth2Api.getMockSocketKey(
-        DTO: UserEmailDTO(
-      email: '',
-    ));
-    if (tmp) {
-      print('>>> mock web success');
-    } else {
-      print('>>> mock web failed');
-    }
-  }
-
-  Future<void> realSocketKey() async {
-    var tmp = await Oauth2Api.getRealSocketKey(
-        DTO: UserEmailDTO(
-      email: '',
-    ));
-    if (tmp) {
-      print('>>> real web success');
-    } else {
-      print('>>> real web failed');
-    }
-  }
-
   Future<void> mockToken() async {
     var tmp = await Oauth2Api.getMockToken(
         DTO: UserEmailDTO(
@@ -64,8 +40,6 @@ class _WaitTokenState extends State<WaitToken> {
 
   void doit() async {
     try {
-      // await mockSocketKey();
-      // await realSocketKey();
       await mockToken();
       await realToken();
       await FavoriteData().init();

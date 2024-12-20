@@ -214,19 +214,13 @@ class _StockDetailState extends State<StockDetail> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              stockHave
-                  ? BuySellButton(
-                      widget: widget,
-                      buySell: '판매',
-                      bs: false,
-                      have: true,
-                    )
-                  : BuySellButton(
-                      widget: widget,
-                      buySell: '판매',
-                      bs: false,
-                      have: false,
-                    ),
+              if (stockHave)
+                BuySellButton(
+                  widget: widget,
+                  buySell: '판매',
+                  bs: false,
+                  have: true,
+                ),
               BuySellButton(
                 widget: widget,
                 buySell: '구매',

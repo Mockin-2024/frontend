@@ -276,7 +276,7 @@ class _BuyOrSellState extends State<BuyOrSell> {
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: widget.buy ? Colors.red : Colors.blue,
                   ),
                   onPressed: widget.buy
                       ? () async {

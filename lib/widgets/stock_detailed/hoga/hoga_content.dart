@@ -56,28 +56,30 @@ class HogaContent extends StatelessWidget {
         SizedBox(
           width: priceWidth,
           height: 50,
-          child: Center(
-            child: Column(
-              children: [
-                Text(
-                  '${hogaPrice.toStringAsFixed(3)}$sign',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: isSellOrder ? Colors.blue : Colors.red,
+          child: FittedBox(
+            child: Center(
+              child: Column(
+                children: [
+                  Text(
+                    '${hogaPrice.toStringAsFixed(3)}$sign',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: isSellOrder ? Colors.blue : Colors.red,
+                    ),
                   ),
-                ),
-                Text(
-                  rate < 0
-                      ? '${rate.toStringAsFixed(2)}%'
-                      : '+${rate.toStringAsFixed(2)}%',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: isSellOrder ? Colors.blue : Colors.red,
+                  Text(
+                    rate < 0
+                        ? '${rate.toStringAsFixed(2)}%'
+                        : '+${rate.toStringAsFixed(2)}%',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: isSellOrder ? Colors.blue : Colors.red,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
