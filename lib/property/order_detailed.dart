@@ -345,10 +345,10 @@ class OrderDetailed extends StatelessWidget {
             const SizedBox(height: 20),
             Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  child: FittedBox(
+                    child: TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -370,7 +370,7 @@ class OrderDetailed extends StatelessWidget {
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Row(
