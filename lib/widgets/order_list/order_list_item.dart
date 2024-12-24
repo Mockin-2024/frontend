@@ -73,14 +73,16 @@ class OrderListItem extends StatelessWidget {
           }, children: [
             TableRow(children: [
               TableCell(
-                child: Column(
-                  children: [
-                    Text('$orderDate  ',
-                        style: const TextStyle(color: Colors.black)),
-                    const SizedBox(height: 5),
-                    Text('$signed/$buyOrSell  ',
-                        style: const TextStyle(color: Colors.black)),
-                  ],
+                child: FittedBox(
+                  child: Column(
+                    children: [
+                      Text('$orderDate  ',
+                          style: const TextStyle(color: Colors.black)),
+                      const SizedBox(height: 5),
+                      Text('$signed/$buyOrSell  ',
+                          style: const TextStyle(color: Colors.black)),
+                    ],
+                  ),
                 ),
               ),
               TableCell(
@@ -96,15 +98,17 @@ class OrderListItem extends StatelessWidget {
                 ),
               ),
               TableCell(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('$amount주',
-                        style: const TextStyle(color: Colors.black)),
-                    Text(
-                        '${double.parse(price).toStringAsFixed(3)}${ExchangeTrans.signExchange[ExchangeTrans.orderTradeReverse[excd]]}',
-                        style: const TextStyle(color: Colors.black)),
-                  ],
+                child: FittedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('$amount주',
+                          style: const TextStyle(color: Colors.black)),
+                      Text(
+                          '${double.parse(price).toStringAsFixed(3)}${ExchangeTrans.signExchange[ExchangeTrans.orderTradeReverse[excd]]}',
+                          style: const TextStyle(color: Colors.black)),
+                    ],
+                  ),
                 ),
               ),
             ]),
