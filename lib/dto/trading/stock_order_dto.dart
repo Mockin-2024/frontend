@@ -10,9 +10,10 @@ class StockOrderDTO {
     required this.overseasOrderUnitPrice,
   });
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toJson(bool isBuy) {
     return {
-      "transactionId": ExchangeTrans.buyOrder[excd],
+      "transactionId":
+          isBuy ? ExchangeTrans.buyOrder[excd] : ExchangeTrans.sellOrder[excd],
       "overseasExchangeCode": ExchangeTrans.orderTrade[excd],
       "productNumber": symb,
       "orderQuantity": orderQuantity,
