@@ -38,7 +38,7 @@ class TradeApi {
         'Authorization':
             'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
-      body: jsonEncode(DTO.toJson()),
+      body: jsonEncode(DTO.toJson(true)),
     );
     // print('>>> 매수 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
@@ -59,7 +59,7 @@ class TradeApi {
         'Authorization':
             'Bearer ${await JwtToken().read(UserEmail().getEmail()!)}',
       },
-      body: jsonEncode(DTO.toJson()),
+      body: jsonEncode(DTO.toJson(false)),
     );
     // print('>>> 매도 ${jsonDecode(utf8.decode(response.bodyBytes))}');
     if (response.statusCode == 200) {
